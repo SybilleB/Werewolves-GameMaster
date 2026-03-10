@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Game - Werewolf GM</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+
+<body>
+    <button id="btn-master-view" class="btn-master-flottant">📋</button>
+
+    <div id="modal-master-view" class="modal-overlay cache">
+        <div class="modal-contenu">
+            <button id="btn-close-master" class="btn-fermer">✖</button>
+            <h2 class="game-recap">Game Recap</h2>
+            <div id="recap-players-list"></div>
+        </div>
+    </div>
+
+    <section id="ecran-choix-roles">
+        <h2>Create your deck</h2>
+        <div class="infos-paquet">
+            <span>Total players: <strong id="total-joueurs">0</strong></span>
+            <button id="btn-reinitialiser" class="btn-texte">Reset</button>
+        </div>
+
+        <h3>Classics</h3>
+        <div class="grille-roles">
+            <div class="carte-role loup" data-role="loup" data-nom="Werewolf">
+                <span class="nom-role">🐺 Werewolf</span>
+                <div class="controles-compteur">
+                    <button class="btn-moins" data-cible="loup">-</button>
+                    <span class="qte" id="qte-loup">0</span>
+                    <button class="btn-plus" data-cible="loup">+</button>
+                </div>
+            </div>
+            <div class="carte-role villageois" data-role="villageois" data-nom="Villager">
+                <span class="nom-role">🧑‍🌾 Villager</span>
+                <div class="controles-compteur">
+                    <button class="btn-moins" data-cible="villageois">-</button>
+                    <span class="qte" id="qte-villageois">0</span>
+                    <button class="btn-plus" data-cible="villageois">+</button>
+                </div>
+            </div>
+        </div>
+
+        <h3>Unique Roles</h3>
+        <div class="grille-roles">
+            <button class="carte-role special" data-role="cupidon" data-nom="Cupid">🏹 Cupid</button>
+            <button class="carte-role special" data-role="voyante" data-nom="Seer">👁️ Seer</button>
+            <button class="carte-role special" data-role="garde" data-nom="Guard">🛡️ Guard</button>
+            <button class="carte-role special" data-role="montreur" data-nom="Bear Tamer">🐻 Bear Tamer</button>
+            <button class="carte-role special" data-role="corbeau" data-nom="Crow">🐦 Crow</button>
+            <button class="carte-role special" data-role="petite-fille" data-nom="Little Girl">👧 Little Girl</button>
+            <button class="carte-role special" data-role="sorciere" data-nom="Witch">🧙‍♀️ Witch</button>
+            <button class="carte-role special" data-role="chasseur" data-nom="Hunter">🔫 Hunter</button>
+        </div>
+
+        <div class="barre-bas">
+            <button id="btn-valider-roles" class="btn-principal">Validate Deck</button>
+        </div>
+    </section>
+
+    <section id="ecran-parametres" class="cache">
+        <h2>Game Settings</h2>
+        <div class="etape-container">
+            <div class="parametres-groupe">
+                <p class="parametre-titre">⏳ Council Discussion Time:</p>
+                <select id="select-timer">
+                    <option value="120">2 Minutes</option>
+                    <option value="180" selected>3 Minutes</option>
+                    <option value="300">5 Minutes</option>
+                    <option value="480">8 Minutes</option>
+                    <option value="0">Unlimited</option>
+                </select>
+            </div>
+
+            <div class="parametres-groupe">
+                <p class="parametre-titre">🎖️ Captain Election:</p>
+                <label class="checkbox-container" for="checkbox-capitaine">
+                    <input type="checkbox" id="checkbox-capitaine" class="checkbox-input" checked>
+                    <span class="checkbox-label">Enable Captain Election before Night 1</span>
+                </label>
+            </div>
+
+            <div id="groupe-option-reelection" class="sub-option">
+                <div class="checkbox-container">
+                    <input type="checkbox" id="checkbox-reelection" class="checkbox-input" checked>
+                    <label for="checkbox-reelection" class="checkbox-label">Successor Designation (on death)</label>
+                </div>
+            </div>
+
+            <div class="parametres-groupe">
+                <p class="parametre-titre">⚖️ Tiebreaker (Revote):</p>
+                <label class="checkbox-container" for="checkbox-revote">
+                    <input type="checkbox" id="checkbox-revote" class="checkbox-input" checked>
+                    <span class="checkbox-label">Allow a second vote in case of a tie</span>
+                </label>
+            </div>
+        </div>
+        <div class="barre-bas">
+            <button id="btn-valider-parametres" class="btn-principal">Next Step</button>
+        </div>
+    </section>
+
+    <section id="ecran-saisie-joueurs" class="cache">
+        <h2>Who is who?</h2>
+        <div class="info-cercle">
+                <strong>Seating Order :</strong> Please add the players in clockwise order around the table.
+            </div>
+        <div class="formulaire-ajout">
+            <input type="text" id="nom-joueur" placeholder="Name..." autocomplete="off">
+            <select id="role-joueur">
+                <option value="">Role...</option>
+            </select>
+            <button id="btn-ajouter">+</button>
+        </div>
+        <ul id="liste-config-joueurs" class="liste-simple"></ul>
+        <div class="barre-bas">
+            <button id="btn-demarrer" class="btn-principal" disabled>Next Step</button>
+        </div>
+    </section>
+
+    <section id="ecran-capitaine" class="cache">
+        <h2>Captain Election</h2>
+        <div class="etape-container">
+            <span class="captain-badge">🎖️</span>
+            <p class="info-bulle">
+                The village must choose a leader. 
+                The Captain's vote counts as double in case of a tie.
+            </p>
+            <select id="select-capitaine">
+                </select>
+        </div>
+        <div class="barre-bas">
+            <button id="btn-valider-capitaine" class="btn-principal" disabled>Night 1</button>
+        </div>
+    </section>
+
+    <section id="ecran-nuit" class="cache">
+        <h2 id="titre-nuit">Night 1</h2>
+
+        <div id="contenu-etape-nuit"></div>
+
+        <div id="zone-timer" class="cache">
+            <div id="affichage-chrono">03:00</div>
+            <div class="barre-timer-conteneur">
+                <div id="barre-timer"></div>
+            </div>
+            <button id="btn-start-timer" class="btn-secondaire">Start Timer</button>
+        </div>
+
+        <div id="zone-vote-village" class="cache">
+            <p class="parametre-titre">🗳️ Village Council Decision:</p>
+            <select id="select-elimine-village"></select>
+        </div>
+
+        <div id="zone-sentence-village" class="cache"></div>
+
+        <div class="barre-bas">
+            <button id="btn-etape-suivante" class="btn-principal">Proceed</button>
+        </div>
+    </section>
+
+    <script src="/scripts/script.js" defer></script>
+</body>
+
+</html>
