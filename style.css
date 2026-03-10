@@ -1353,3 +1353,27 @@ select {
     font-size: 1.1rem;
     animation: fadeIn 0.5s ease;
 }
+
+/* =========================================
+   19. LA SORCIÈRE (Potions)
+========================================= */
+.potion-group {
+    margin-bottom: 20px;
+}
+
+.witch-info {
+    font-size: 0.85rem;
+    color: var(--texte-secondaire);
+    margin-bottom: 5px;
+}
+
+.witch-target {
+    color: var(--rouge-sang);
+    font-weight: bold;
+}
+
+.potion-used {
+    color: var(--rouge-sang);
+    font-style: italic;
+    margin-top: 5px;
+}

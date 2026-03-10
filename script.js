@@ -69,8 +69,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let attenteTirChasseur = false;
     let nomChasseurMort = "";
 
-    let reelectionEnabled = false; 
+    let reelectionEnabled = false;
     let attenteSuccession = false;
+
+    let witchHasSave = true;
+    let witchHasKill = true;
+
+    let mortsParAmour = [];
 
     document.getElementById('checkbox-capitaine').addEventListener('change', (e) => {
         const groupe = document.getElementById('groupe-option-reelection');
@@ -170,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const li = document.createElement('li');
         li.className = 'joueur-item';
-        
+
         li.innerHTML = `
             <div style="display:flex; align-items:center; gap:10px;">
                 <span class="joueur-place" style="background:rgba(187,134,252,0.2); color:var(--accent); padding:4px 8px; border-radius:6px; font-weight:bold;"></span>
@@ -190,11 +195,11 @@ document.addEventListener("DOMContentLoaded", () => {
         btnDelete.addEventListener('click', () => {
             joueursPartie = joueursPartie.filter(j => j.nom !== nom);
             li.remove();
-            
+
             mettreAJourNumeros();
 
             rolesChoisis[id].quantite++;
-            
+
             let optionExistante = false;
             for (let i = 0; i < selectRoleJoueur.options.length; i++) {
                 if (selectRoleJoueur.options[i].value === id) {
@@ -221,9 +226,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const temp = joueursPartie[index];
                 joueursPartie[index] = joueursPartie[index - 1];
                 joueursPartie[index - 1] = temp;
-                
+
                 li.parentNode.insertBefore(li, li.previousElementSibling);
-                
+
                 mettreAJourNumeros();
             }
         });
@@ -235,9 +240,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const temp = joueursPartie[index];
                 joueursPartie[index] = joueursPartie[index + 1];
                 joueursPartie[index + 1] = temp;
-                
+
                 li.parentNode.insertBefore(li.nextElementSibling, li);
-                
+
                 mettreAJourNumeros();
             }
         });
@@ -250,9 +255,9 @@ document.addEventListener("DOMContentLoaded", () => {
             selectRoleJoueur.options[selectRoleJoueur.selectedIndex].text = `${rolesChoisis[id].nom} (x${rolesChoisis[id].quantite})`;
         }
 
-        inputNomJoueur.value = ""; 
+        inputNomJoueur.value = "";
         inputNomJoueur.focus();
-        
+
         if (selectRoleJoueur.options.length === 1) {
             btnDemarrer.disabled = false;
             btnAjouterJoueur.disabled = true;
@@ -350,9 +355,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (joueursPartie.some(j => j.roleId === 'corbeau' && j.enVie)) etapesDeCetteNuit.push({ id: 'corbeau', nom: '🐦‍⬛ The Crow' });
 
         etapesDeCetteNuit.push({ id: 'matin', nom: 'Morning' });
-        indexEtapeActuelle = 0; 
-        victimsTonight = []; 
-        protectedByGuard = null; 
+        indexEtapeActuelle = 0;
+        victimsTonight = [];
+        mortsParAmour = [];
+        protectedByGuard = null;
         crowTarget = null;
         hasRevotedToday = false;
         afficherEtapeNuit();
@@ -363,10 +369,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         contenuEtapeNuit.classList.remove('cache');
         contenuEtapeNuit.style.display = "";
-        
+
         zoneVoteVillage.classList.add('cache');
         zoneVoteVillage.style.display = "none";
-        
+
         btnEtapeSuivante.textContent = "NEXT";
         btnEtapeSuivante.classList.remove('cache');
 
@@ -452,7 +458,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
             case 'voyante':
                 const optionsCiblesSeer = joueursPartie
-                    .filter(j => j.enVie && j.roleId !== 'voyante') 
+                    .filter(j => j.enVie && j.roleId !== 'voyante')
                     .map(j => `<option value="${j.nom}">${j.nom}</option>`)
                     .join('');
 
@@ -468,14 +474,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 setTimeout(() => {
                     const sel = document.getElementById('seer-target');
-                    
+
                     if (btnEtapeSuivante) btnEtapeSuivante.disabled = true;
 
                     if (sel) {
                         sel.addEventListener('change', (e) => {
                             const target = joueursPartie.find(j => j.nom === e.target.value);
                             const container = document.getElementById('seer-result-container');
-                            
+
                             if (target) {
                                 container.innerHTML = `
                                     <div class="seer-result">
@@ -492,9 +498,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
             case 'garde':
                 let optionsGarde = '<option value="" disabled selected>Select a player to protect...</option>';
-                
+
                 const survivantsGarde = joueursPartie.filter(j => j.enVie);
-                
+
                 survivantsGarde.forEach(j => {
                     if (j.nom === lastProtectedByGuard) {
                         optionsGarde += `<option value="${j.nom}" disabled>${j.nom} (Protected last night)</option>`;
@@ -539,10 +545,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 }, 0);
                 break;
             case 'sorciere':
-                const vLoup = victimsTonight[0];
-                let optSave = `<option value="">Nobody (Save)</option>${vLoup ? `<option value="${vLoup}">${vLoup}</option>` : ''}`;
-                const optKill = joueursPartie.filter(j => j.enVie && j.nom !== vLoup).map(j => `<option value="${j.nom}">${j.nom}</option>`).join('');
-                html += `<div class="action-mj"><p>Victim: ${vLoup ? `<b class="text-danger">${vLoup}</b>` : 'None'}</p><p>Potion of Life?</p><select id="witch-save">${optSave}</select><p>Potion of Death?</p><select id="witch-kill"><option value="">Nobody (Kill)</option>${optKill}</select></div>`;
+                html += `
+                    <div class="action-mj">
+                        <div class="parametres-groupe potion-group">
+                            <p class="parametre-titre">💖 Potion of Life :</p>
+                            ${witchHasSave ? `
+                                <p class="witch-info">
+                                    Target of the wolves: <span class="witch-target">${victimsTonight.length > 0 ? victimsTonight.join(', ') : 'Nobody'}</span>
+                                </p>
+                                <select id="witch-save">
+                                    <option value="">Don't use</option>
+                                    ${victimsTonight.map(v => `<option value="${v}">${v}</option>`).join('')}
+                                </select>
+                            ` : `<p class="potion-used">❌ Already used</p>`}
+                        </div>
+
+                        <div class="parametres-groupe">
+                            <p class="parametre-titre">💀 Potion of Death :</p>
+                            ${witchHasKill ? `
+                                <select id="witch-kill">
+                                    <option value="">Don't use</option>
+                                    ${joueursPartie.filter(j => j.enVie).map(j => `<option value="${j.nom}">${j.nom}</option>`).join('')}
+                                </select>
+                            ` : `<p class="potion-used">❌ Already used</p>`}
+                        </div>
+                    </div>
+                `;
                 break;
             case 'corbeau':
                 const optionsObligatoires = joueursPartie
@@ -594,12 +622,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     const left = joueursPartie[(idx - 1 + joueursPartie.length) % joueursPartie.length];
                     const right = joueursPartie[(idx + 1) % joueursPartie.length];
                     const growl = (left.roleId === 'loup' || right.roleId === 'loup');
-                    
-                    bearMsg = growl ? 
+
+                    bearMsg = growl ?
                         `<div class="bear-growl">
                             <span class="event-icon">🐻</span>
                             <div><strong>The Bear Growls!</strong> A wolf is nearby...</div>
-                        </div>` : 
+                        </div>` :
                         `<div class="bear-silent">🐾 The Bear remains peaceful.</div>`;
                 }
 
@@ -607,9 +635,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (victimsTonight.length > 0) {
                     htmlMorts = victimsTonight.map(nom => {
                         const joueur = joueursPartie.find(p => p.nom === nom);
+                        const coeur = mortsParAmour.includes(nom) ? ' ❤️' : '';
+
                         return `<div class="annonce-mort cause-classique">
-                                    <span class="annonce-mort-nom">${nom}</span>
-                                    <span class="annonce-mort-role">${joueur ? joueur.roleNom : 'Unknown'}</span>
+                                    <span class="annonce-mort-nom">${nom}${coeur}</span>
+                                    <span class="annonce-mort-role">Role: ${joueur ? joueur.roleNom : 'Unknown'}</span>
                                 </div>`;
                     }).join('');
                 } else {
@@ -627,10 +657,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>` : '';
 
                 let roleEventsHtml = bearMsg + crowHtml;
-                
+
                 if (roleEventsHtml !== "") {
                     roleEventsHtml = `<hr class="separator-dots">` + roleEventsHtml;
-                } else if (!attenteTirChasseur && !attenteSuccession) { 
+                } else if (!attenteTirChasseur && !attenteSuccession) {
                     roleEventsHtml = `
                         <hr class="separator-dots">
                         <div class="no-events-night">
@@ -654,7 +684,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (attenteTirChasseur || attenteSuccession) {
                     if (btnEtapeSuivante) btnEtapeSuivante.style.display = "none";
-                    
+
                     if (attenteTirChasseur) html += gererTirChasseur();
                     if (attenteSuccession) html += gererSuccessionCapitaine();
                 } else {
@@ -667,7 +697,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const survivantsReels = joueursPartie.filter(j => j.enVie);
                 let optionsVote = '<option value="">Nobody (Tie / Skip)</option>';
                 optionsVote += survivantsReels.map(j => `<option value="${j.nom}">${j.nom}</option>`).join('');
-                
+
                 if (selectElimineVillage) {
                     selectElimineVillage.innerHTML = optionsVote;
                 }
@@ -677,7 +707,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     btnEtapeSuivante.addEventListener('click', () => {
-        
+
         if (jeuTermine && typeVictoire) {
             afficherEcranVictoire(typeVictoire);
             typeVictoire = null;
@@ -690,10 +720,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const etape = etapesDeCetteNuit[indexEtapeActuelle];
-    
+
         if (etape.id === 'matin') {
             const ecranNews = document.getElementById('ecran-morning-news');
-            
+
             if (ecranNews && !ecranNews.classList.contains('cache')) {
                 ecranNews.classList.add('cache');
                 if (contenuEtapeNuit) contenuEtapeNuit.classList.add('cache');
@@ -714,7 +744,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const elimineVillage = selectElimineVillage.value;
-            
+
             if (!elimineVillage && !hasRevotedToday) {
                 hasRevotedToday = true;
                 titreNuit.innerHTML = `⚖️ Revote`;
@@ -725,15 +755,26 @@ document.addEventListener("DOMContentLoaded", () => {
                     btnStartTimer.disabled = false;
                     btnStartTimer.textContent = "Start Timer";
                 }
-                return; 
+                return;
             }
 
             const tousLesMorts = [...victimsTonight];
             if (elimineVillage && !tousLesMorts.includes(elimineVillage)) {
                 tousLesMorts.push(elimineVillage);
             }
-            
+
             tousLesMorts.forEach(nom => tuerJoueur(nom));
+
+            // --- NOUVEAU : On prépare la liste de TOUS les morts du conseil ---
+            let mortsDuConseil = [];
+            if (elimineVillage) {
+                mortsDuConseil.push(elimineVillage);
+                // Si l'éliminé est amoureux, on ajoute son partenaire à l'affichage
+                if (lovers.includes(elimineVillage)) {
+                    const partnerNom = lovers.find(n => n !== elimineVillage);
+                    mortsDuConseil.push(partnerNom);
+                }
+            }
 
             enPhaseSentence = true;
             titreNuit.style.display = "none";
@@ -744,14 +785,19 @@ document.addEventListener("DOMContentLoaded", () => {
             let htmlSentence = `<h2 class="titre-nuit-etape">☀️ Village Council</h2>`;
             htmlSentence += `<div class="etape-container"><div class="mort-conseil-wrapper">`;
 
-            if (elimineVillage) {
-                const joueurObj = joueursPartie.find(p => p.nom === elimineVillage);
-                htmlSentence += `
-                    <p class="resultat-conseil">The village has decided</p>
-                    <div class="annonce-mort cause-classique">
-                        <span class="annonce-mort-nom">${elimineVillage}</span>
-                        <span class="annonce-mort-role">Role: ${joueurObj ? joueurObj.roleNom : 'Unknown'}</span>
-                    </div>`;
+            if (mortsDuConseil.length > 0) {
+                htmlSentence += `<p class="resultat-conseil">The village has decided</p>`;
+
+                mortsDuConseil.forEach(nomMort => {
+                    const joueurObj = joueursPartie.find(p => p.nom === nomMort);
+                    const coeur = mortsParAmour.includes(nomMort) ? ' ❤️' : '';
+
+                    htmlSentence += `
+                        <div class="annonce-mort cause-classique">
+                            <span class="annonce-mort-nom">${nomMort}${coeur}</span>
+                            <span class="annonce-mort-role">Role: ${joueurObj ? joueurObj.roleNom : 'Unknown'}</span>
+                        </div>`;
+                });
             } else {
                 htmlSentence += `
                     <div class="no-death-council">
@@ -766,8 +812,8 @@ document.addEventListener("DOMContentLoaded", () => {
             zoneSentenceVillage.style.display = "block";
 
             if (attenteTirChasseur || attenteSuccession) {
-                btnEtapeSuivante.style.display = "none"; 
-                
+                btnEtapeSuivante.style.display = "none";
+
                 if (attenteTirChasseur) zoneSentenceVillage.innerHTML += gererTirChasseur();
                 if (attenteSuccession) zoneSentenceVillage.innerHTML += gererSuccessionCapitaine();
             } else {
@@ -778,10 +824,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 btnEtapeSuivante.style.display = "block";
             }
-            
+
             enPhaseSentence = true;
 
-            return; 
+            return;
         }
 
         if (etape.id === 'cupidon') {
@@ -818,14 +864,20 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (etape.id === 'sorciere') {
             const selectSave = document.getElementById('witch-save');
             const selectKill = document.getElementById('witch-kill');
-            
-            if (selectSave && selectSave.value && victimsTonight.includes(selectSave.value)) {
-                victimsTonight = victimsTonight.filter(v => v !== selectSave.value);
-            }
-            if (selectKill && selectKill.value && !victimsTonight.includes(selectKill.value)) {
-                victimsTonight.push(selectKill.value);
+
+            if (selectSave && selectSave.value) {
+                const nomASauver = selectSave.value;
+                victimsTonight = victimsTonight.filter(v => v !== nomASauver);
+                witchHasSave = false;
             }
 
+            if (selectKill && selectKill.value) {
+                const nomATuer = selectKill.value;
+                if (!victimsTonight.includes(nomATuer)) {
+                    victimsTonight.push(nomATuer);
+                }
+                witchHasKill = false;
+            }
         } else if (etape.id === 'corbeau') {
             const selectCrow = document.getElementById('curse');
             if (selectCrow) {
@@ -840,7 +892,10 @@ document.addEventListener("DOMContentLoaded", () => {
             baseVictims.forEach(nom => {
                 if (lovers.includes(nom)) {
                     const partnerNom = lovers.find(n => n !== nom);
-                    if (!victimsTonight.includes(partnerNom)) victimsTonight.push(partnerNom);
+                    if (!victimsTonight.includes(partnerNom)) {
+                        victimsTonight.push(partnerNom);
+                        if (!mortsParAmour.includes(partnerNom)) mortsParAmour.push(partnerNom);
+                    }
                 }
             });
         }
@@ -852,7 +907,7 @@ document.addEventListener("DOMContentLoaded", () => {
         enPhaseSentence = false;
         zoneSentenceVillage.classList.add('cache');
         zoneSentenceVillage.style.display = "none";
-        
+
         titreNuit.style.display = "";
         contenuEtapeNuit.style.display = "";
 
@@ -863,12 +918,16 @@ document.addEventListener("DOMContentLoaded", () => {
         preparerEtapesNuit();
     }
 
-    function tuerJoueur(nom) {
+    function tuerJoueur(nom, parAmour = false) {
         if (jeuTermine) return;
 
         const j = joueursPartie.find(p => p.nom === nom);
         if (j && j.enVie) {
             j.enVie = false;
+
+            if (parAmour) {
+                if (!mortsParAmour.includes(nom)) mortsParAmour.push(nom);
+            }
 
             if (nom === nomCapitaine) {
                 if (reelectionEnabled) {
@@ -886,13 +945,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 const partnerNom = lovers.find(n => n !== nom);
                 const partner = joueursPartie.find(p => p.nom === partnerNom);
                 if (partner && partner.enVie) {
-                    tuerJoueur(partnerNom); 
+                    tuerJoueur(partnerNom, true);
                 }
             }
 
-            if (!attenteTirChasseur) {
-                const resultat = verifierFinPartie();
-                if (resultat && !jeuTermine) {
+            const resultat = verifierFinPartie();
+
+            if (resultat && !jeuTermine) {
+                attenteSuccession = false;
+
+                if (!attenteTirChasseur) {
                     jeuTermine = true;
                     typeVictoire = resultat;
                 }
@@ -911,11 +973,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         joueursPartie.forEach(j => {
             const estMortMaintenant = !j.enVie || victimsTonight.includes(j.nom);
-            
+
             const statusClass = !estMortMaintenant ? 'status-alive' : 'status-dead';
             const heartIcon = (lovers.includes(j.nom)) ? ' ❤️' : '';
             const capIcon = (nomCapitaine === j.nom) ? ' 🎖️' : '';
-            
+
             html += `
                 <tr class="master-tr">
                     <td class="master-td ${statusClass}">
@@ -931,7 +993,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         html += '</table>';
-        
+
         const vivants = joueursPartie.filter(j => j.enVie && !victimsTonight.includes(j.nom)).length;
         html += `<p class="master-alive-count">Players alive: ${vivants} / ${joueursPartie.length}</p>`;
 
@@ -968,7 +1030,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (loups.length === 0 && villageois.length === 0) {
-            return 'egalite'; 
+            return 'egalite';
         }
 
         return null;
@@ -978,47 +1040,47 @@ document.addEventListener("DOMContentLoaded", () => {
         jeuTermine = true;
 
         const elementsToHide = [
-            'zone-timer', 
-            'zone-vote-village', 
+            'zone-timer',
+            'zone-vote-village',
             'contenu-etape-nuit',
             'ecran-morning-news'
         ];
-        
+
         elementsToHide.forEach(id => {
             const el = document.getElementById(id);
-            if(el) {
+            if (el) {
                 el.style.display = 'none';
                 el.classList.add('cache');
             }
         });
 
-        let config = { 
-            icon: "🏘️", 
-            title: "Village Victory", 
-            class: "victory-village", 
-            desc: "The threat is gone. Peace returns to the village." 
+        let config = {
+            icon: "🏘️",
+            title: "Village Victory",
+            class: "victory-village",
+            desc: "The threat is gone. Peace returns to the village."
         };
-        
+
         if (type === 'loups') {
-            config = { 
-                icon: "🐺", 
-                title: "Wolves Victory", 
-                class: "victory-wolves", 
-                desc: "The village is silent. The pack has won." 
+            config = {
+                icon: "🐺",
+                title: "Wolves Victory",
+                class: "victory-wolves",
+                desc: "The village is silent. The pack has won."
             };
         } else if (type === 'amoureux') {
-            config = { 
-                icon: "❤️", 
-                title: "Lovers Victory", 
-                class: "victory-lovers", 
-                desc: "Love was stronger than the call of the wild." 
+            config = {
+                icon: "❤️",
+                title: "Lovers Victory",
+                class: "victory-lovers",
+                desc: "Love was stronger than the call of the wild."
             };
         } else if (type === 'egalite') {
-            config = { 
-                icon: "🪦", 
-                title: "Mutual Destruction", 
-                class: "victory-egalite", 
-                desc: "Everyone is dead. The village is nothing but a ghost town." 
+            config = {
+                icon: "🪦",
+                title: "Mutual Destruction",
+                class: "victory-egalite",
+                desc: "Everyone is dead. The village is nothing but a ghost town."
             };
         }
 
@@ -1029,20 +1091,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p class="victory-desc">${config.desc}</p>
             </div>
         `;
-        
+
         zoneSentenceVillage.style.display = "block";
         zoneSentenceVillage.classList.remove('cache');
 
         if (btnEtapeSuivante) {
             const nouveauBtn = btnEtapeSuivante.cloneNode(true);
             btnEtapeSuivante.parentNode.replaceChild(nouveauBtn, btnEtapeSuivante);
-            
+
             nouveauBtn.id = "btn-etape-suivante";
             nouveauBtn.innerHTML = "NEW GAME";
             nouveauBtn.style.display = "block";
             nouveauBtn.classList.remove("cache");
             nouveauBtn.disabled = false;
-            
+
             nouveauBtn.addEventListener("click", () => {
                 location.reload();
             });
@@ -1070,7 +1132,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }
 
-    window.validerTirChasseur = function() {
+    window.validerTirChasseur = function () {
         const cible = document.getElementById('select-cible-chasseur').value;
         if (!cible) return alert("The Hunter MUST shoot someone!");
 
@@ -1089,7 +1151,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const joueurObj = joueursPartie.find(p => p.nom === cible);
-        
+
         const htmlSentence = `
             <div class="mort-conseil-wrapper hunter-sentence-wrapper">
                 <p class="resultat-conseil resultat-chasseur">Shot by the Hunter</p>
@@ -1103,7 +1165,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const ecranNews = document.getElementById('ecran-morning-news');
         if (ecranNews && !ecranNews.classList.contains('cache')) {
             ecranNews.querySelector('.morning-news-container').innerHTML += htmlSentence;
-            
+
             const survivantsReels = joueursPartie.filter(j => j.enVie);
             let optionsVote = '<option value="">Nobody (Tie / Skip)</option>';
             optionsVote += survivantsReels.map(j => `<option value="${j.nom}">${j.nom}</option>`).join('');
@@ -1134,7 +1196,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }
 
-    window.validerSuccession = function() {
+    window.validerSuccession = function () {
         const nouveau = document.getElementById('select-nouveau-capitaine').value;
         if (!nouveau) return alert("You must choose a successor!");
 
@@ -1143,7 +1205,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('bloc-succession').classList.add('cache');
 
         const msg = `<p class="annonce-succession">🎖️ ${nouveau} is the new Captain!</p>`;
-        
+
         const ecranNews = document.getElementById('ecran-morning-news');
         if (ecranNews && !ecranNews.classList.contains('cache')) {
             ecranNews.querySelector('.morning-news-container').innerHTML += msg;
