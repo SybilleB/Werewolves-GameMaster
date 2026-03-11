@@ -77,6 +77,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let mortsParAmour = [];
 
+
+    let currentLang = 'fr'; 
+
+    document.getElementById('lang-toggle-checkbox').addEventListener('change', (e) => {
+        if (e.target.checked) {
+            currentLang = 'en';
+        } else {
+            currentLang = 'fr';
+        }
+        
+        console.log("Langue changée en :", currentLang);
+        
+        const ecranNuit = document.getElementById('ecran-nuit');
+        if (ecranNuit && !ecranNuit.classList.contains('cache')) {
+            afficherEtapeNuit();
+        }
+    });
+
     document.getElementById('checkbox-capitaine').addEventListener('change', (e) => {
         const groupe = document.getElementById('groupe-option-reelection');
         if (e.target.checked) groupe.classList.remove('cache');
@@ -615,19 +633,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     btnEtapeSuivante.style.display = "block";
                 }
 
-                const tamer = joueursPartie.find(j => j.roleId === 'montreur' && j.enVie);
+                const survivantsMatin = joueursPartie.filter(j => j.enVie);
+                const tamerAlive = survivantsMatin.find(j => j.roleId === 'montreur');
+                
                 let bearMsg = "";
-                if (tamer) {
-                    const idx = joueursPartie.indexOf(tamer);
-                    const left = joueursPartie[(idx - 1 + joueursPartie.length) % joueursPartie.length];
-                    const right = joueursPartie[(idx + 1) % joueursPartie.length];
+                if (tamerAlive) {
+                    const idx = survivantsMatin.indexOf(tamerAlive);
+                    
+                    const left = survivantsMatin[(idx - 1 + survivantsMatin.length) % survivantsMatin.length];
+                    const right = survivantsMatin[(idx + 1) % survivantsMatin.length];
+                    
                     const growl = (left.roleId === 'loup' || right.roleId === 'loup');
-
-                    bearMsg = growl ?
+                    
+                    bearMsg = growl ? 
                         `<div class="bear-growl">
                             <span class="event-icon">🐻</span>
                             <div><strong>The Bear Growls!</strong> A wolf is nearby...</div>
-                        </div>` :
+                        </div>` : 
                         `<div class="bear-silent">🐾 The Bear remains peaceful.</div>`;
                 }
 
@@ -1038,6 +1060,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function afficherEcranVictoire(type) {
         jeuTermine = true;
+
+        if (titreNuit) {
+            titreNuit.style.display = "block";
+        }
 
         const elementsToHide = [
             'zone-timer',
