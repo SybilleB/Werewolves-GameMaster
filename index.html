@@ -1,179 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Game - Werewolf GM</title>
-    <link rel="stylesheet" href="style.css?v=2">
+    <title>Werewolf GM</title>
+    <link rel="icon" type="image/x-icon" href="/wolf.png">
+    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
-    <button id="btn-master-view" class="btn-master-flottant">📋</button>
-    
-    <div class="lang-switch-container">
-        <input type="checkbox" id="lang-toggle-checkbox" class="lang-checkbox">
-        <label for="lang-toggle-checkbox" class="lang-slider">
-            <span class="lang-fr">FR</span>
-            <span class="lang-en">EN</span>
-            <div class="lang-knob"></div>
-        </label>
-    </div>
+
+    <header>
+        <h1 class="titre-app" data-i18n="mainTitle">Loups-Garous - Edition Maître du Jeu</h1>
+
+        <div class="lang-switch-container">
+            <input type="checkbox" id="lang-toggle-checkbox" class="lang-checkbox">
+            <label for="lang-toggle-checkbox" class="lang-slider">
+                <span class="lang-fr">FR</span>
+                <span class="lang-en">EN</span>
+                <div class="lang-knob"></div>
+            </label>
+        </div>
+
+        <button id="btn-master-view" class="btn-master-flottant" title="Master View">📋</button>
+    </header>
+
+    <section>
+        <main id="app-container">
+
+            <div id="ecran-choix-roles">
+                <h2 data-i18n="setupTitle">Composition du village</h2>
+                <p style="text-align: center; margin-bottom: 20px;"><span data-i18n="totalPlayers">Joueurs totaux
+                        :</span> <strong id="total-joueurs" style="color: var(--accent);">0</strong></p>
+
+                <div class="grille-roles">
+                    <div class="carte-role base villageois" data-role="villageois" data-nom="Villageois">
+                        <h3>🧑‍🌾 <span data-i18n="roleVillagerName">Villageois</span></h3>
+                        <div class="controles-compteur">
+                            <button class="btn-moins" data-cible="villageois">-</button>
+                            <span id="qte-villageois" class="qte">0</span>
+                            <button class="btn-plus" data-cible="villageois">+</button>
+                        </div>
+                    </div>
+                    <div class="carte-role base loup" data-role="loup" data-nom="Loup-Garou">
+                        <h3>🐺 <span data-i18n="roleWolfName">Loup-Garou</span></h3>
+                        <div class="controles-compteur">
+                            <button class="btn-moins" data-cible="loup">-</button>
+                            <span id="qte-loup" class="qte">0</span>
+                            <button class="btn-plus" data-cible="loup">+</button>
+                        </div>
+                    </div>
+
+                    <div class="carte-role special" data-role="voyante" data-nom="Voyante">
+                        <h3>👁️ <span data-i18n="roleSeerName">Voyante</span></h3>
+                    </div>
+                    <div class="carte-role special" data-role="sorciere" data-nom="Sorcière">
+                        <h3>🧙‍♀️ <span data-i18n="roleWitchName">Sorcière</span></h3>
+                    </div>
+                    <div class="carte-role special" data-role="cupidon" data-nom="Cupidon">
+                        <h3>🏹 <span data-i18n="roleCupidName">Cupidon</span></h3>
+                    </div>
+                    <div class="carte-role special" data-role="garde" data-nom="Garde">
+                        <h3>🛡️ <span data-i18n="roleGuardName">Garde</span></h3>
+                    </div>
+                    <div class="carte-role special" data-role="chasseur" data-nom="Chasseur">
+                        <h3>🎯 <span data-i18n="roleHunterName">Chasseur</span></h3>
+                    </div>
+                    <div class="carte-role special" data-role="corbeau" data-nom="Corbeau">
+                        <h3>🐦‍⬛ <span data-i18n="roleCrowName">Corbeau</span></h3>
+                    </div>
+                    <div class="carte-role special" data-role="montreur" data-nom="Montreur d'Ours">
+                        <h3>🐻 <span data-i18n="roleBearName">Montreur d'Ours</span></h3>
+                    </div>
+                </div>
+
+                <div class="bouton-transition-container"
+                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                    <button id="btn-reinitialiser" class="btn-texte" data-i18n="btnReset">Réinitialiser</button>
+                    <button id="btn-valider-roles" class="btn-principal" style="margin: 0; max-width: 200px;"
+                        data-i18n="btnValidateRoles">Valider les rôles</button>
+                </div>
+            </div>
+
+            <div id="ecran-parametres" class="cache">
+                <h2 data-i18n="settingsTitle">Paramètres de la partie</h2>
+
+                <div class="etape-container">
+                    <div class="parametres-groupe">
+                        <p class="parametre-titre" data-i18n="timerLabel">⏳ Temps de débat (Conseil) :</p>
+                        <select id="select-timer">
+                            <option value="120" data-i18n="time2m">2 Minutes</option>
+                            <option value="180" selected data-i18n="time3m">3 Minutes</option>
+                            <option value="300" data-i18n="time5m">5 Minutes</option>
+                            <option value="480" data-i18n="time8m">8 Minutes</option>
+                            <option value="0" data-i18n="timeUnl">Illimité</option>
+                        </select>
+                    </div>
+
+                    <div class="parametres-groupe">
+                        <p class="parametre-titre" data-i18n="capSectionTitle">🎖️ Élection du Capitaine :</p>
+                        <label class="checkbox-container" for="checkbox-capitaine">
+                            <input type="checkbox" id="checkbox-capitaine" class="checkbox-input" checked>
+                            <span class="checkbox-label" data-i18n="capEnableDesc">Activer l'élection du Capitaine avant
+                                la Nuit 1</span>
+                        </label>
+                    </div>
+
+                    <div id="groupe-option-reelection" class="sub-option">
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="checkbox-reelection" class="checkbox-input" checked>
+                            <label for="checkbox-reelection" class="checkbox-label"
+                                data-i18n="capReelectDesc">Désignation d'un successeur (en cas de mort)</label>
+                        </div>
+                    </div>
+
+                    <div class="parametres-groupe">
+                        <p class="parametre-titre" data-i18n="tiebreakerTitle">⚖️ Égalité (Revote) :</p>
+                        <label class="checkbox-container" for="checkbox-revote">
+                            <input type="checkbox" id="checkbox-revote" class="checkbox-input" checked>
+                            <span class="checkbox-label" data-i18n="tiebreakerDesc">Autoriser un second vote en cas
+                                d'égalité</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button id="btn-valider-parametres" class="btn-principal" data-i18n="btnContinue">Étape
+                    suivante</button>
+            </div>
+
+            <div id="ecran-saisie-joueurs" class="cache">
+                <h2 data-i18n="playersTitle">Ajouter les joueurs</h2>
+
+                <div class="formulaire-ajout">
+                    <input type="text" id="nom-joueur" data-i18n="placeholderName" placeholder="Entrez un nom...">
+                    <select id="role-joueur"></select>
+                    <button id="btn-ajouter" data-i18n="btnAdd">Ajouter</button>
+                </div>
+
+                <ul id="liste-config-joueurs" class="liste-simple"></ul>
+
+                <button id="btn-demarrer" class="btn-principal" disabled data-i18n="btnStart">Démarrer la
+                    partie</button>
+            </div>
+
+            <div id="ecran-capitaine" class="cache">
+                <div class="etape-container">
+                    <span class="captain-badge">🎖️</span>
+                    <h2 data-i18n="capTitle">Élection du Capitaine</h2>
+                    <p class="info-bulle" data-i18n="capDesc">Le village élit son Capitaine avant la première nuit.</p>
+                    <select id="select-capitaine"></select>
+                    <button id="btn-valider-capitaine" class="btn-principal" disabled data-i18n="btnValidateCap">Valider
+                        le Capitaine</button>
+                </div>
+            </div>
+
+            <div id="ecran-nuit" class="cache">
+                <h2 id="titre-nuit" class="titre-nuit-etape">Nuit 1</h2>
+
+                <div id="contenu-etape-nuit"></div>
+                <div id="zone-sentence-village" class="cache"></div>
+
+                <div id="zone-timer" class="cache etape-container">
+                    <h3 class="titre-conseil" data-i18n="timerTitle">Chronomètre de débat</h3>
+
+                    <div id="chrono-cercle-container">
+                        <svg class="chrono-svg" viewBox="0 0 100 100">
+                            <circle class="chrono-cercle-fond" cx="50" cy="50" r="45"></circle>
+                            <circle class="chrono-cercle-progression" id="barre-timer" cx="50" cy="50" r="45"></circle>
+                        </svg>
+                        <div id="affichage-chrono">03:00</div>
+                    </div>
+
+                    <div class="timer-controles">
+                        <button id="btn-timer-moins" class="btn-timer-secondaire">-30s</button>
+                        <button id="btn-start-timer" class="btn-timer-principal"
+                            data-i18n="btnStartTimer">Démarrer</button>
+                        <button id="btn-timer-reset" class="btn-timer-secondaire"
+                            data-i18n="btnResetTimer">Reset</button>
+                        <button id="btn-timer-plus" class="btn-timer-secondaire">+30s</button>
+                    </div>
+                </div>
+
+                <div id="zone-vote-village" class="cache etape-container">
+                    <h3 class="titre-conseil" data-i18n="voteTitle">Vote du Village</h3>
+                    <select id="select-elimine-village"></select>
+                </div>
+
+                <button id="btn-etape-suivante" class="btn-principal cache" data-i18n="btnNext">SUIVANT</button>
+            </div>
+
+        </main>
+    </section>
 
     <div id="modal-master-view" class="modal-overlay cache">
         <div class="modal-contenu">
             <button id="btn-close-master" class="btn-fermer">✖</button>
-            <h2 class="game-recap">Game Recap</h2>
+            <h2 style="color: var(--accent); margin-top: 10px;">📋 Master View</h2>
             <div id="recap-players-list"></div>
         </div>
     </div>
 
-    <section id="ecran-choix-roles">
-        <h2>Create your deck</h2>
-        <div class="infos-paquet">
-            <span>Total players: <strong id="total-joueurs">0</strong></span>
-            <button id="btn-reinitialiser" class="btn-texte">Reset</button>
-        </div>
-
-        <h3>Classics</h3>
-        <div class="grille-roles">
-            <div class="carte-role loup" data-role="loup" data-nom="Werewolf">
-                <span class="nom-role">🐺 Werewolf</span>
-                <div class="controles-compteur">
-                    <button class="btn-moins" data-cible="loup">-</button>
-                    <span class="qte" id="qte-loup">0</span>
-                    <button class="btn-plus" data-cible="loup">+</button>
-                </div>
-            </div>
-            <div class="carte-role villageois" data-role="villageois" data-nom="Villager">
-                <span class="nom-role">🧑‍🌾 Villager</span>
-                <div class="controles-compteur">
-                    <button class="btn-moins" data-cible="villageois">-</button>
-                    <span class="qte" id="qte-villageois">0</span>
-                    <button class="btn-plus" data-cible="villageois">+</button>
-                </div>
-            </div>
-        </div>
-
-        <h3>Unique Roles</h3>
-        <div class="grille-roles">
-            <button class="carte-role special" data-role="cupidon" data-nom="Cupid">🏹 Cupid</button>
-            <button class="carte-role special" data-role="voyante" data-nom="Seer">👁️ Seer</button>
-            <button class="carte-role special" data-role="garde" data-nom="Guard">🛡️ Guard</button>
-            <button class="carte-role special" data-role="montreur" data-nom="Bear Tamer">🐻 Bear Tamer</button>
-            <button class="carte-role special" data-role="corbeau" data-nom="Crow">🐦 Crow</button>
-            <button class="carte-role special" data-role="petite-fille" data-nom="Little Girl">👧 Little Girl</button>
-            <button class="carte-role special" data-role="sorciere" data-nom="Witch">🧙‍♀️ Witch</button>
-            <button class="carte-role special" data-role="chasseur" data-nom="Hunter">🔫 Hunter</button>
-        </div>
-
-        <div class="barre-bas">
-            <button id="btn-valider-roles" class="btn-principal">Validate Deck</button>
-        </div>
-    </section>
-
-    <section id="ecran-parametres" class="cache">
-        <h2>Game Settings</h2>
-        <div class="etape-container">
-            <div class="parametres-groupe">
-                <p class="parametre-titre">⏳ Council Discussion Time:</p>
-                <select id="select-timer">
-                    <option value="120">2 Minutes</option>
-                    <option value="180" selected>3 Minutes</option>
-                    <option value="300">5 Minutes</option>
-                    <option value="480">8 Minutes</option>
-                    <option value="0">Unlimited</option>
-                </select>
-            </div>
-
-            <div class="parametres-groupe">
-                <p class="parametre-titre">🎖️ Captain Election:</p>
-                <label class="checkbox-container" for="checkbox-capitaine">
-                    <input type="checkbox" id="checkbox-capitaine" class="checkbox-input" checked>
-                    <span class="checkbox-label">Enable Captain Election before Night 1</span>
-                </label>
-            </div>
-
-            <div id="groupe-option-reelection" class="sub-option">
-                <div class="checkbox-container">
-                    <input type="checkbox" id="checkbox-reelection" class="checkbox-input" checked>
-                    <label for="checkbox-reelection" class="checkbox-label">Successor Designation (on death)</label>
-                </div>
-            </div>
-
-            <div class="parametres-groupe">
-                <p class="parametre-titre">⚖️ Tiebreaker (Revote):</p>
-                <label class="checkbox-container" for="checkbox-revote">
-                    <input type="checkbox" id="checkbox-revote" class="checkbox-input" checked>
-                    <span class="checkbox-label">Allow a second vote in case of a tie</span>
-                </label>
-            </div>
-        </div>
-        <div class="barre-bas">
-            <button id="btn-valider-parametres" class="btn-principal">Next Step</button>
-        </div>
-    </section>
-
-    <section id="ecran-saisie-joueurs" class="cache">
-        <h2>Who is who?</h2>
-        <div class="info-cercle">
-            <strong>Seating Order :</strong> Please add the players in clockwise order around the table.
-        </div>
-        <div class="formulaire-ajout">
-            <input type="text" id="nom-joueur" placeholder="Name..." autocomplete="off">
-            <select id="role-joueur">
-                <option value="">Role...</option>
-            </select>
-            <button id="btn-ajouter">+</button>
-        </div>
-        <ul id="liste-config-joueurs" class="liste-simple"></ul>
-        <div class="barre-bas">
-            <button id="btn-demarrer" class="btn-principal" disabled>Next Step</button>
-        </div>
-    </section>
-
-    <section id="ecran-capitaine" class="cache">
-        <h2>Captain Election</h2>
-        <div class="etape-container">
-            <span class="captain-badge">🎖️</span>
-            <p class="info-bulle">
-                The village must choose a leader.
-                The Captain's vote counts as double in case of a tie.
-            </p>
-            <select id="select-capitaine">
-            </select>
-        </div>
-        <div class="barre-bas">
-            <button id="btn-valider-capitaine" class="btn-principal" disabled>Night 1</button>
-        </div>
-    </section>
-
-    <section id="ecran-nuit" class="cache">
-        <h2 id="titre-nuit">Night 1</h2>
-
-        <div id="contenu-etape-nuit"></div>
-
-        <div id="zone-timer" class="cache">
-            <div id="affichage-chrono">03:00</div>
-            <div class="barre-timer-conteneur">
-                <div id="barre-timer"></div>
-            </div>
-            <button id="btn-start-timer" class="btn-secondaire">Start Timer</button>
-        </div>
-
-        <div id="zone-vote-village" class="cache">
-            <p class="parametre-titre">🗳️ Village Council Decision:</p>
-            <select id="select-elimine-village"></select>
-        </div>
-
-        <div id="zone-sentence-village" class="cache"></div>
-
-        <div class="barre-bas">
-            <button id="btn-etape-suivante" class="btn-principal">Proceed</button>
-        </div>
-    </section>
-
-    <script src="script.js" defer></script>
+    <script src="script.js"></script>
 </body>
 
 </html>

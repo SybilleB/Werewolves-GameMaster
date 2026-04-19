@@ -4,16 +4,16 @@ Une application web interactive conçue pour assister le Maître du Jeu (MJ) lor
 
 ## ✨ Fonctionnalités
 
-* **Création de Paquet :** Composez votre village avec précision (Loups, Villageois, Sorcière, Chasseur, Garde, Voyante, Cupidon, Corbeau, Montreur d'Ours).
+* **Création de Deck :** Composez votre village comme vous le souhaitez (Loups, Villageois, Sorcière, Chasseur, Garde, Voyante, Cupidon, Corbeau, Montreur d'Ours).
 * **Cycle Automatisé :** Gestion fluide des phases de Nuit et de Jour avec des instructions claires pour le MJ.
 * **Chronomètre Intégré :** Timer paramétrable pour les débats du conseil villageois.
 * **Règles Avancées :** * Gestion complète de la Sorcière (Potions à usage unique).
     * Tir de vengeance du Chasseur (avec interface dédiée).
-    * Élection et succession du Capitaine (vote double).
+    * Élection du Capitaine, et succession en cas de décès.
     * Gestion des Amoureux (mort par chagrin d'amour avec le marqueur ❤️).
-    * Le flair du Montreur d'Ours mis à jour dynamiquement.
+    * Le flair du Montreur d'Ours mis à jour dynamiquement tous les matins.
 * **Vue Maître (Master View) :** Un tableau de bord discret (📋) accessible à tout moment pour vérifier le statut (Vivant/Mort), les rôles et les liens de tous les joueurs.
-* **Design Immersif :** Thème sombre pour la nuit et clair pour le jour, parfait pour une ambiance tamisée. Application PWA-ready (installable sur l'écran d'accueil iOS/Android).
+* **Design Immersif :** Thème sombre pour la nuit et clair pour le jour, parfait pour une ambiance tamisée.
 
 ## 🚀 Utilisation
 
@@ -26,5 +26,5 @@ Aucune installation complexe n'est requise. C'est du pur HTML, CSS et Vanilla Ja
 ## 🛠️ Technologies
 
 * HTML5
-* CSS3 (Variables, Flexbox, Animations)
-* JavaScript (Vanilla, manipulation du DOM, gestion d'état)
+* CSS3 
+* JavaScript Vanilla

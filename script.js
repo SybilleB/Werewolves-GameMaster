@@ -1,4 +1,140 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const i18n = {
+        en: {
+            mainTitle: "The Werewolf - Game Master Edition",
+            placeholderName: "Enter name...",
+            day: "☀️ Day", night: "🌙 Night", council: "☀️ Village Council", revote: "⚖️ Revote",
+            btnNext: "NEXT", btnProceed: "Proceed to council", btnProceedShort: "Proceed", btnVictory: "SHOW VICTORY", btnNextNight: "NEXT NIGHT", btnNewGame: "NEW GAME", btnShoot: "SHOOT", btnStartTimer: "Start Timer", btnPauseTimer: "Pause", btnResumeTimer: "Resume", btnResetTimer: "Reset", btnRunning: "Running...",
+            roleCupid: "🏹 Cupid", roleLovers: "💕 The Lovers", roleSeer: "👁️ The Seer", roleGuard: "🛡️ The Guard", roleWolves: "🐺 The Werewolves", roleWitch: "🧙‍♀️ The Witch", roleCrow: "🐦‍⬛ The Crow", roleMorning: "Morning",
+            cupidInst: "Cupid chooses the two lovers:", lover1: "Lover 1...", lover2: "Lover 2...", playerLabel: "Player(s):",
+            loversLabel: "Lovers:", noneSelected: "None selected", loversRec: "They recognize each other.",
+            seerInst: "Who do they inspect tonight?", selTarget: "Select target...",
+            guardInst: "The Guard must choose a player to protect from the wolves, not the same person twice in a row.", selProtect: "Select a player to protect...", protLastNight: "Protected last night", guardMust: "The Guard MUST protect someone!",
+            wolvesInst: "The Werewolves must choose a prey:", selVictim: "Select a victim...",
+            witchLife: "💖 Potion of Life :", witchDeath: "💀 Potion of Death :", targetWolves: "Target of the wolves:", nobody: "Nobody", dontUse: "Don't use", save: "Save", kill: "Kill", used: "❌ Already used",
+            crowInst: "The Crow must curse a player tonight:", startsVote: "starts with 1 vote against them.", crowMark: "Crow's Mark",
+            bearGrowls: "The Bear Growls!", wolfNearby: "A wolf is nearby...", bearPeaceful: "🐾 The Bear remains peaceful.",
+            safeNight: "☀️ Safe night! No one died.", noEvents: "No other events", villageWakes: "The village wakes up without further disturbances.",
+            nobodyTie: "Nobody (Tie / Skip)", villageDecided: "The village has decided", role: "Role:", noDeath: "Equality or skip: No one was executed.",
+            vicVillTitle: "Village Victory", vicVillDesc: "The threat is gone. Peace returns to the village.",
+            vicWolfTitle: "Wolves Victory", vicWolfDesc: "The village is silent. The pack has won.",
+            vicLoveTitle: "Lovers Victory", vicLoveDesc: "Love was stronger than the call of the wild.",
+            vicTieTitle: "Mutual Destruction", vicTieDesc: "Everyone is dead. The village is nothing but a ghost town.",
+            huntRev: "🎯 Hunter's Revenge", huntDied: "died and must shoot someone!", huntMust: "The Hunter MUST shoot someone!", shotBy: "Shot by the Hunter",
+            capElected: "Who is elected?", selCaptain: "Please select a captain!", newCap: "🎖️ NEW CAPTAIN", capDead: "The Captain is dead. They must designate a successor!", selNextCap: "Select the next Captain...", isNewCap: "is the new Captain!", capMust: "You must choose a successor!",
+            timesUp: "TIME'S UP!", mvName: "Name", mvRole: "Role", mvStatus: "Status", mvAlive: "ALIVE", mvDead: "DEAD", mvPlayers: "Players alive:", errRoles: "Select roles first!", errLovers: "Select 2 different lovers.",
+
+            setupTitle: "Create your deck", totalPlayers: "Total players:", roleVillagerName: "Villager", roleWolfName: "Werewolf", roleSeerName: "Seer", roleWitchName: "Witch", roleCupidName: "Cupid", roleGuardName: "Guard", roleHunterName: "Hunter", roleCrowName: "Crow", roleBearName: "Bear Tamer", btnReset: "Reset", btnValidateRoles: "Validate Roles", settingsTitle: "Game Settings",
+            timerLabel: "⏳ Council Discussion Time:", time2m: "2 Minutes", time3m: "3 Minutes", time5m: "5 Minutes", time8m: "8 Minutes", timeUnl: "Unlimited",
+            capSectionTitle: "🎖️ Captain Election:", capEnableDesc: "Enable Captain Election before Night 1", capReelectDesc: "Successor Designation (on death)",
+            tiebreakerTitle: "⚖️ Tiebreaker (Revote):", tiebreakerDesc: "Allow a second vote in case of a tie",
+            btnContinue: "Next Step", playersTitle: "Add Players", btnAdd: "Add", btnStart: "Start Game", capTitle: "Captain Election", capDesc: "The village elects its Captain before the first night.", btnValidateCap: "Confirm Captain", timerTitle: "Debate Timer", voteTitle: "Village Vote", btnClose: "Close"
+        },
+        fr: {
+            mainTitle: "Loups-Garous - Edition Maître du Jeu",
+            placeholderName: "Entrez un nom...",
+            day: "☀️ Jour", night: "🌙 Nuit", council: "☀️ Conseil du Village", revote: "⚖️ Revote",
+            btnNext: "SUIVANT", btnProceed: "Passer au conseil", btnProceedShort: "Continuer", btnVictory: "VOIR LA VICTOIRE", btnNextNight: "NUIT SUIVANTE", btnNewGame: "NOUVELLE PARTIE", btnShoot: "TIRER", btnStartTimer: "Lancer le Timer", btnPauseTimer: "Pause", btnResumeTimer: "Reprendre", btnResetTimer: "Reset", btnRunning: "En cours...",
+            roleCupid: "🏹 Cupidon", roleLovers: "💕 Les Amoureux", roleSeer: "👁️ La Voyante", roleGuard: "🛡️ Le Garde", roleWolves: "🐺 Les Loups-Garous", roleWitch: "🧙‍♀️ La Sorcière", roleCrow: "🐦‍⬛ Le Corbeau", roleMorning: "Matin",
+            cupidInst: "Cupidon choisit les deux amoureux :", lover1: "Amoureux 1...", lover2: "Amoureux 2...", playerLabel: "Joueur(s) :",
+            loversLabel: "Amoureux :", noneSelected: "Aucun sélectionné", loversRec: "Ils se reconnaissent.",
+            seerInst: "Qui inspecte-t-elle cette nuit ?", selTarget: "Sélectionnez une cible...",
+            guardInst: "Le Garde doit protéger un joueur des loups (pas la même personne deux nuits de suite).", selProtect: "Sélectionnez un joueur à protéger...", protLastNight: "Protégé la nuit dernière", guardMust: "Le Garde DOIT protéger quelqu'un !",
+            wolvesInst: "Les Loups-Garous choisissent leur proie :", selVictim: "Sélectionnez une victime...",
+            witchLife: "💖 Potion de Vie :", witchDeath: "💀 Potion de Mort :", targetWolves: "Cible des loups :", nobody: "Personne", dontUse: "Ne pas utiliser", save: "Sauver", kill: "Tuer", used: "❌ Déjà utilisée",
+            crowInst: "Le Corbeau doit maudire un joueur cette nuit :", startsVote: "commence avec 1 vote contre lui.", crowMark: "Marque du Corbeau",
+            bearGrowls: "L'Ours Grogne !", wolfNearby: "Un loup est proche...", bearPeaceful: "🐾 L'Ours reste paisible.",
+            safeNight: "☀️ Nuit calme ! Personne n'est mort.", noEvents: "Aucun autre événement", villageWakes: "Le village se réveille sans autres perturbations.",
+            nobodyTie: "Personne (Égalité / Passer)", villageDecided: "Le village a tranché", role: "Rôle :", noDeath: "Égalité ou vote blanc : Personne n'a été exécuté.",
+            vicVillTitle: "Victoire du Village", vicVillDesc: "La menace est écartée. La paix revient au village.",
+            vicWolfTitle: "Victoire des Loups", vicWolfDesc: "Le village est silencieux. La meute a gagné.",
+            vicLoveTitle: "Victoire des Amoureux", vicLoveDesc: "L'amour a été plus fort que l'appel de la nature.",
+            vicTieTitle: "Destruction Mutuelle", vicTieDesc: "Tout le monde est mort. Le village n'est plus qu'une ville fantôme.",
+            huntRev: "🎯 Vengeance du Chasseur", huntDied: "est mort et doit tirer sur quelqu'un !", huntMust: "Le Chasseur DOIT tirer sur quelqu'un !", shotBy: "Abattu par le Chasseur",
+            capElected: "Qui est élu ?", selCaptain: "Veuillez sélectionner un capitaine !", newCap: "🎖️ NOUVEAU CAPITAINE", capDead: "Le Capitaine est mort. Il doit désigner un successeur !", selNextCap: "Sélectionnez le prochain Capitaine...", isNewCap: "est le nouveau Capitaine !", capMust: "Vous devez choisir un successeur !",
+            timesUp: "TEMPS ÉCOULÉ !", mvName: "Nom", mvRole: "Rôle", mvStatus: "Statut", mvAlive: "VIVANT", mvDead: "MORT", mvPlayers: "Joueurs en vie :", errRoles: "Sélectionnez les rôles d'abord !", errLovers: "Sélectionnez 2 amoureux différents.",
+
+            setupTitle: "Composition du village", totalPlayers: "Joueurs totaux :", roleVillagerName: "Villageois", roleWolfName: "Loup-Garou", roleSeerName: "Voyante", roleWitchName: "Sorcière", roleCupidName: "Cupidon", roleGuardName: "Garde", roleHunterName: "Chasseur", roleCrowName: "Corbeau", roleBearName: "Montreur d'Ours", btnReset: "Réinitialiser", btnValidateRoles: "Valider les rôles", settingsTitle: "Paramètres de la partie",
+            timerLabel: "⏳ Temps de débat (Conseil) :", time2m: "2 Minutes", time3m: "3 Minutes", time5m: "5 Minutes", time8m: "8 Minutes", timeUnl: "Illimité",
+            capSectionTitle: "🎖️ Élection du Capitaine :", capEnableDesc: "Activer l'élection du Capitaine avant la Nuit 1", capReelectDesc: "Désignation d'un successeur (en cas de mort)",
+            tiebreakerTitle: "⚖️ Égalité (Revote) :", tiebreakerDesc: "Autoriser un second vote en cas d'égalité",
+            btnContinue: "Étape suivante", playersTitle: "Ajouter les joueurs", btnAdd: "Ajouter", btnStart: "Démarrer la partie", capTitle: "Élection du Capitaine", capDesc: "Le village élit son Capitaine avant la première nuit.", btnValidateCap: "Valider le Capitaine", timerTitle: "Chronomètre de débat", voteTitle: "Vote du Village", btnClose: "Fermer"
+        }
+    };
+
+    const idVersCle = {
+        'villageois': 'roleVillagerName',
+        'loup': 'roleWolfName',
+        'voyante': 'roleSeerName',
+        'sorciere': 'roleWitchName',
+        'cupidon': 'roleCupidName',
+        'garde': 'roleGuardName',
+        'chasseur': 'roleHunterName',
+        'corbeau': 'roleCrowName',
+        'montreur': 'roleBearName'
+    };
+
+    let currentLang = 'fr';
+
+    const langToggle = document.getElementById('lang-toggle-checkbox');
+    if (langToggle) {
+        langToggle.addEventListener('change', (e) => {
+            currentLang = e.target.checked ? 'en' : 'fr';
+            const t = i18n[currentLang];
+
+
+            for (const id in rolesChoisis) {
+                const roleKey = "role" + id.charAt(0).toUpperCase() + id.slice(1) + "Name";
+                if (t[roleKey]) {
+                    rolesChoisis[id].nom = t[roleKey];
+                }
+            }
+
+            joueursPartie.forEach(joueur => {
+                const roleKey = idVersCle[joueur.roleId];
+                if (roleKey && t[roleKey]) {
+                    joueur.roleNom = t[roleKey];
+                }
+            });
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) {
+                    if (el.tagName === 'INPUT') el.placeholder = t[key];
+                    else el.textContent = t[key];
+                }
+            });
+
+            document.querySelectorAll('.role-dynamique').forEach(small => {
+                const roleKey = small.getAttribute('data-i18n');
+                if (t[roleKey]) {
+                    small.textContent = t[roleKey];
+                }
+            });
+
+            if (selectRoleJoueur && selectRoleJoueur.options) {
+                Array.from(selectRoleJoueur.options).forEach(opt => {
+                    if (!opt.value) return;
+
+                    const id = opt.value;
+                    const roleKey = idVersCle[id];
+
+                    if (rolesChoisis[id]) {
+                        const quantite = rolesChoisis[id].quantite;
+                        const nomTraduit = t[roleKey] || rolesChoisis[id].nom;
+
+                        opt.textContent = `${nomTraduit} (x${quantite})`;
+                    }
+                });
+            }
+
+            const ecranNuit = document.getElementById('ecran-nuit');
+            if (ecranNuit && !ecranNuit.classList.contains('cache')) {
+                afficherEtapeNuit();
+            }
+        });
+    }
+
     const totalJoueursSpan = document.getElementById('total-joueurs');
     const btnReinitialiser = document.getElementById('btn-reinitialiser');
     const btnValiderRoles = document.getElementById('btn-valider-roles');
@@ -24,17 +160,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputNomJoueur = document.getElementById('nom-joueur');
     const listeRoleJoueur = document.getElementById('liste-config-joueurs');
     const btnAjouterJoueur = document.getElementById('btn-ajouter');
-    const selectTimer = document.getElementById('select-timer');
 
     const ecranNuit = document.getElementById('ecran-nuit');
     const contenuEtapeNuit = document.getElementById('contenu-etape-nuit');
     const btnEtapeSuivante = document.getElementById('btn-etape-suivante');
     const titreNuit = document.getElementById('titre-nuit');
 
+    const selectTimer = document.getElementById('select-timer');
     const zoneTimer = document.getElementById('zone-timer');
     const affichageChrono = document.getElementById('affichage-chrono');
     const barreTimer = document.getElementById('barre-timer');
     const btnStartTimer = document.getElementById('btn-start-timer');
+    const btnTimerPlus = document.getElementById('btn-timer-plus');
+    const btnTimerMoins = document.getElementById('btn-timer-moins');
+    const btnTimerReset = document.getElementById('btn-timer-reset');
+
+    let timerInterval = null;
+    let dureeInitiale = 180;
+    let tempsRestant = 180;
+    let estEnMarche = false;
+    let chronoAteLanceUneFois = false;
 
     const zoneVoteVillage = document.getElementById('zone-vote-village');
     const selectElimineVillage = document.getElementById('select-elimine-village');
@@ -55,13 +200,12 @@ document.addEventListener("DOMContentLoaded", () => {
     let indexEtapeActuelle = 0;
 
     let victimsTonight = [];
+    let mortsParAmour = [];
     let protectedByGuard = null;
     let crowTarget = null;
     let lovers = [];
     let isFirstNight = true;
     let nightCount = 1;
-    let discussionTime = 180;
-    let timerInterval = null;
     let enPhaseSentence = false;
     let hasRevotedToday = false;
     let lastProtectedByGuard = null;
@@ -75,25 +219,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let witchHasSave = true;
     let witchHasKill = true;
 
-    let mortsParAmour = [];
-
-
-    let currentLang = 'fr'; 
-
-    document.getElementById('lang-toggle-checkbox').addEventListener('change', (e) => {
-        if (e.target.checked) {
-            currentLang = 'en';
-        } else {
-            currentLang = 'fr';
-        }
-        
-        console.log("Langue changée en :", currentLang);
-        
-        const ecranNuit = document.getElementById('ecran-nuit');
-        if (ecranNuit && !ecranNuit.classList.contains('cache')) {
-            afficherEtapeNuit();
-        }
-    });
 
     document.getElementById('checkbox-capitaine').addEventListener('change', (e) => {
         const groupe = document.getElementById('groupe-option-reelection');
@@ -152,11 +277,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     btnValiderRoles.addEventListener('click', () => {
+        const t = i18n[currentLang];
         let total = 0;
         for (let r in rolesChoisis) total += rolesChoisis[r].quantite;
-        if (total === 0) return alert("Select roles first!");
+        if (total === 0) return alert(t.errRoles);
 
-        selectRoleJoueur.innerHTML = '<option value="">Role...</option>';
+        selectRoleJoueur.innerHTML = `<option value="">Role...</option>`;
         for (let id in rolesChoisis) {
             const opt = document.createElement('option');
             opt.value = id; opt.textContent = `${rolesChoisis[id].nom} (x${rolesChoisis[id].quantite})`;
@@ -179,7 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function mettreAJourNumeros() {
         const items = listeRoleJoueur.querySelectorAll('.joueur-item');
         items.forEach((item, index) => {
-            const placeSpan = item.querySelector('.joueur-place');
+            const placeSpan = item.querySelector('.numero-place');
             if (placeSpan) placeSpan.textContent = `#${index + 1}`;
         });
     }
@@ -194,34 +320,41 @@ document.addEventListener("DOMContentLoaded", () => {
         const li = document.createElement('li');
         li.className = 'joueur-item';
 
+        const roleKey = idVersCle[id];
+        const nomTraduit = i18n[currentLang][roleKey] || rolesChoisis[id].nom;
+
         li.innerHTML = `
-            <div style="display:flex; align-items:center; gap:10px;">
-                <span class="joueur-place" style="background:rgba(187,134,252,0.2); color:var(--accent); padding:4px 8px; border-radius:6px; font-weight:bold;"></span>
-                <div><strong>${nom}</strong><br><small>${rolesChoisis[id].nom}</small></div>
+            <div class="container-info-joueur">
+                <span class="numero-place"></span>
+                <div>
+                    <strong>${nom}</strong><br>
+                    <small class="role-dynamique" data-i18n="${roleKey}">${i18n[currentLang][roleKey] || rolesChoisis[id].nom}</small>
+                </div>
             </div>
-            <div style="display:flex; gap:8px;">
-                <button class="btn-up" style="background:none; border:none; cursor:pointer; font-size:1.2rem;">⬆️</button>
-                <button class="btn-down" style="background:none; border:none; cursor:pointer; font-size:1.2rem;">⬇️</button>
-                <button class="btn-supprimer-joueur" style="background:none; border:none; cursor:pointer; font-size:1.2rem; color:var(--rouge-sang);">✖</button>
+            <div class="container-btn-joueur">
+                <button class="btn-up btn-ordre">⬆️</button>
+                <button class="btn-down btn-ordre">⬇️</button>
+                <button class="btn-supprimer-joueur">✖</button>
             </div>
         `;
-        listeRoleJoueur.appendChild(li);
 
+        const small = li.querySelector('.role-dynamique');
+        small.textContent = i18n[currentLang][roleKey] || id;
+
+        listeRoleJoueur.appendChild(li);
         mettreAJourNumeros();
 
         const btnDelete = li.querySelector('.btn-supprimer-joueur');
         btnDelete.addEventListener('click', () => {
             joueursPartie = joueursPartie.filter(j => j.nom !== nom);
             li.remove();
-
             mettreAJourNumeros();
 
             rolesChoisis[id].quantite++;
-
             let optionExistante = false;
             for (let i = 0; i < selectRoleJoueur.options.length; i++) {
                 if (selectRoleJoueur.options[i].value === id) {
-                    selectRoleJoueur.options[i].text = `${rolesChoisis[id].nom} (x${rolesChoisis[id].quantite})`;
+                    selectRoleJoueur.options[i].text = `${nomTraduit} (x${rolesChoisis[id].quantite})`;
                     optionExistante = true;
                     break;
                 }
@@ -229,10 +362,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!optionExistante) {
                 const opt = document.createElement('option');
                 opt.value = id;
-                opt.textContent = `${rolesChoisis[id].nom} (x${rolesChoisis[id].quantite})`;
+                opt.textContent = `${nomTraduit} (x${rolesChoisis[id].quantite})`;
                 selectRoleJoueur.appendChild(opt);
             }
-
             btnDemarrer.disabled = true;
             btnAjouterJoueur.disabled = false;
         });
@@ -244,9 +376,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const temp = joueursPartie[index];
                 joueursPartie[index] = joueursPartie[index - 1];
                 joueursPartie[index - 1] = temp;
-
                 li.parentNode.insertBefore(li, li.previousElementSibling);
-
                 mettreAJourNumeros();
             }
         });
@@ -258,9 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const temp = joueursPartie[index];
                 joueursPartie[index] = joueursPartie[index + 1];
                 joueursPartie[index + 1] = temp;
-
                 li.parentNode.insertBefore(li.nextElementSibling, li);
-
                 mettreAJourNumeros();
             }
         });
@@ -270,7 +398,7 @@ document.addEventListener("DOMContentLoaded", () => {
             selectRoleJoueur.remove(selectRoleJoueur.selectedIndex);
             selectRoleJoueur.value = "";
         } else {
-            selectRoleJoueur.options[selectRoleJoueur.selectedIndex].text = `${rolesChoisis[id].nom} (x${rolesChoisis[id].quantite})`;
+            selectRoleJoueur.options[selectRoleJoueur.selectedIndex].text = `${nomTraduit} (x${rolesChoisis[id].quantite})`;
         }
 
         inputNomJoueur.value = "";
@@ -283,6 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     btnDemarrer.addEventListener('click', () => {
+        const t = i18n[currentLang];
         ecranSaisieJoueurs.classList.add('cache');
         ecranSaisieJoueurs.style.display = "none";
 
@@ -290,7 +419,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ecranNuit.classList.add('cache');
             ecranNuit.style.display = "none";
 
-            let optionsCapitaine = '<option value="">Who is elected?</option>';
+            let optionsCapitaine = `<option value="">${t.capElected}</option>`;
             joueursPartie.forEach(j => {
                 optionsCapitaine += `<option value="${j.nom}">${j.nom}</option>`;
             });
@@ -314,8 +443,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     btnValiderCapitaine.addEventListener('click', () => {
+        const t = i18n[currentLang];
         const cap = selectCapitaine.value;
-        if (!cap) return alert("Please select a captain!");
+        if (!cap) return alert(t.selCaptain);
 
         nomCapitaine = cap;
         ecranCapitaine.classList.add('cache');
@@ -327,52 +457,140 @@ document.addEventListener("DOMContentLoaded", () => {
         preparerEtapesNuit();
     });
 
-    function lancerTimer(duree) {
-        clearInterval(timerInterval);
-        let tempsRestant = duree;
-        barreTimer.style.width = "100%";
-        barreTimer.style.backgroundColor = "var(--accent)";
 
-        timerInterval = setInterval(() => {
-            tempsRestant--;
-            const mins = Math.floor(tempsRestant / 60);
-            const secs = tempsRestant % 60;
+    // --- FONCTIONS ---
+    function mettreAJourAffichage() {
+        const mins = Math.floor(tempsRestant / 60);
+        const secs = tempsRestant % 60;
+
+        if (affichageChrono) {
             affichageChrono.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-
-            const pourcentage = (tempsRestant / duree) * 100;
-            barreTimer.style.width = pourcentage + "%";
-
-            if (tempsRestant <= 10) {
-                barreTimer.style.backgroundColor = "var(--rouge-sang)";
-                affichageChrono.style.color = "var(--rouge-sang)";
-            }
-
             if (tempsRestant <= 0) {
-                clearInterval(timerInterval);
-                affichageChrono.textContent = "TIME'S UP!";
+                affichageChrono.textContent = i18n[currentLang].timesUp || "Terminé";
             }
-        }, 1000);
+        }
+
+        if (barreTimer) {
+            const ratio = Math.max(0, Math.min(1, tempsRestant / dureeInitiale));
+            const circonference = 283;
+            const offset = circonference - (ratio * circonference);
+
+            barreTimer.style.strokeDashoffset = offset;
+
+            if (tempsRestant <= 10 && tempsRestant > 0) {
+                barreTimer.style.stroke = "var(--rouge-sang)";
+                if (affichageChrono) affichageChrono.style.color = "var(--rouge-sang)";
+            } else {
+                barreTimer.style.stroke = "var(--accent)";
+                if (affichageChrono) affichageChrono.style.color = "var(--accent)";
+            }
+        }
     }
 
-    btnStartTimer.addEventListener('click', () => {
-        lancerTimer(discussionTime);
-        btnStartTimer.disabled = true;
-        btnStartTimer.textContent = "Running...";
-    });
+    function tickTimer() {
+        if (tempsRestant > 0) {
+            tempsRestant--;
+            mettreAJourAffichage();
+        } else {
+            clearInterval(timerInterval);
+            estEnMarche = false;
+            if (btnStartTimer) {
+                btnStartTimer.textContent = i18n[currentLang].btnStartTimer || "Démarrer";
+                btnStartTimer.classList.remove('btn-timer-pause');
+            }
+        }
+    }
+
+    // --- ÉVÉNEMENTS ---
+    if (btnStartTimer) {
+        btnStartTimer.addEventListener('click', () => {
+            const t = i18n[currentLang];
+            if (!chronoAteLanceUneFois) {
+                dureeInitiale = typeof discussionTime !== 'undefined' ? discussionTime : 180;
+                tempsRestant = dureeInitiale;
+                chronoAteLanceUneFois = true;
+                mettreAJourAffichage();
+            }
+
+            if (estEnMarche) {
+                clearInterval(timerInterval);
+                estEnMarche = false;
+                btnStartTimer.textContent = t.btnResumeTimer || "Reprendre";
+                btnStartTimer.classList.add('btn-timer-pause');
+            } else {
+                if (tempsRestant <= 0) tempsRestant = dureeInitiale;
+                timerInterval = setInterval(tickTimer, 1000);
+                estEnMarche = true;
+                btnStartTimer.textContent = t.btnPauseTimer || "Pause";
+                btnStartTimer.classList.remove('btn-timer-pause');
+            }
+        });
+    }
+
+    if (btnTimerReset) {
+        btnTimerReset.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            estEnMarche = false;
+            if (typeof discussionTime !== 'undefined') dureeInitiale = discussionTime;
+            tempsRestant = dureeInitiale;
+            mettreAJourAffichage();
+            if (btnStartTimer) {
+                btnStartTimer.textContent = i18n[currentLang].btnStartTimer || "Démarrer";
+                btnStartTimer.classList.remove('btn-timer-pause');
+            }
+        });
+    }
+
+    if (btnTimerPlus) {
+        btnTimerPlus.addEventListener('click', () => {
+            if (!chronoAteLanceUneFois) {
+                dureeInitiale = typeof discussionTime !== 'undefined' ? discussionTime : 180;
+                tempsRestant = dureeInitiale;
+                chronoAteLanceUneFois = true;
+            }
+            tempsRestant += 30;
+            if (tempsRestant > dureeInitiale) dureeInitiale = tempsRestant;
+            mettreAJourAffichage();
+        });
+    }
+
+    if (btnTimerMoins) {
+        btnTimerMoins.addEventListener('click', () => {
+            if (!chronoAteLanceUneFois) {
+                dureeInitiale = typeof discussionTime !== 'undefined' ? discussionTime : 180;
+                tempsRestant = dureeInitiale;
+                chronoAteLanceUneFois = true;
+            }
+            tempsRestant = Math.max(0, tempsRestant - 30);
+            mettreAJourAffichage();
+            if (tempsRestant === 0 && estEnMarche) {
+                clearInterval(timerInterval);
+                estEnMarche = false;
+                if (btnStartTimer) {
+                    btnStartTimer.textContent = i18n[currentLang].btnStartTimer || "Démarrer";
+                    btnStartTimer.classList.remove('btn-timer-pause');
+                }
+            }
+        });
+    }
+
 
     function preparerEtapesNuit() {
+        const t = i18n[currentLang];
         document.body.classList.remove('theme-jour');
         etapesDeCetteNuit = [];
-        if (isFirstNight && joueursPartie.some(j => j.roleId === 'cupidon' && j.enVie)) {
-            etapesDeCetteNuit.push({ id: 'cupidon', nom: '🏹 Cupid' }, { id: 'lovers', nom: '💕 The Lovers' });
-        }
-        if (joueursPartie.some(j => j.roleId === 'voyante' && j.enVie)) etapesDeCetteNuit.push({ id: 'voyante', nom: '👁️ The Seer' });
-        if (joueursPartie.some(j => j.roleId === 'garde' && j.enVie)) etapesDeCetteNuit.push({ id: 'garde', nom: '🛡️ The Guard' });
-        if (joueursPartie.some(j => j.roleId === 'loup' && j.enVie)) etapesDeCetteNuit.push({ id: 'loup', nom: '🐺 The Werewolves' });
-        if (joueursPartie.some(j => j.roleId === 'sorciere' && j.enVie)) etapesDeCetteNuit.push({ id: 'sorciere', nom: '🧙‍♀️ The Witch' });
-        if (joueursPartie.some(j => j.roleId === 'corbeau' && j.enVie)) etapesDeCetteNuit.push({ id: 'corbeau', nom: '🐦‍⬛ The Crow' });
 
-        etapesDeCetteNuit.push({ id: 'matin', nom: 'Morning' });
+        if (isFirstNight && joueursPartie.some(j => j.roleId === 'cupidon' && j.enVie)) {
+            etapesDeCetteNuit.push({ id: 'cupidon', nom: t.roleCupid }, { id: 'lovers', nom: t.roleLovers });
+        }
+        if (joueursPartie.some(j => j.roleId === 'voyante' && j.enVie)) etapesDeCetteNuit.push({ id: 'voyante', nom: t.roleSeer });
+        if (joueursPartie.some(j => j.roleId === 'garde' && j.enVie)) etapesDeCetteNuit.push({ id: 'garde', nom: t.roleGuard });
+        if (joueursPartie.some(j => j.roleId === 'loup' && j.enVie)) etapesDeCetteNuit.push({ id: 'loup', nom: t.roleWolves });
+        if (joueursPartie.some(j => j.roleId === 'sorciere' && j.enVie)) etapesDeCetteNuit.push({ id: 'sorciere', nom: t.roleWitch });
+        if (joueursPartie.some(j => j.roleId === 'corbeau' && j.enVie)) etapesDeCetteNuit.push({ id: 'corbeau', nom: t.roleCrow });
+
+        etapesDeCetteNuit.push({ id: 'matin', nom: t.roleMorning });
+
         indexEtapeActuelle = 0;
         victimsTonight = [];
         mortsParAmour = [];
@@ -383,6 +601,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function afficherEtapeNuit() {
+        const t = i18n[currentLang];
+        const etape = etapesDeCetteNuit[indexEtapeActuelle];
         if (btnEtapeSuivante) btnEtapeSuivante.disabled = false;
 
         contenuEtapeNuit.classList.remove('cache');
@@ -391,55 +611,66 @@ document.addEventListener("DOMContentLoaded", () => {
         zoneVoteVillage.classList.add('cache');
         zoneVoteVillage.style.display = "none";
 
-        btnEtapeSuivante.textContent = "NEXT";
+        btnEtapeSuivante.textContent = t.btnNext;
         btnEtapeSuivante.classList.remove('cache');
 
-        const etape = etapesDeCetteNuit[indexEtapeActuelle];
-
         if (etape.id === 'matin') {
-            titreNuit.textContent = `☀️ Day ${nightCount}`;
+            titreNuit.textContent = `${t.day} ${nightCount}`;
         } else {
-            titreNuit.textContent = `🌙 Night ${nightCount}`;
+            titreNuit.textContent = `${t.night} ${nightCount}`;
         }
         titreNuit.className = "titre-nuit-etape";
 
         const optionsVivants = joueursPartie.filter(j => j.enVie).map(j => `<option value="${j.nom}">${j.nom}</option>`).join('');
-        const joueursDeLeEtape = joueursPartie.filter(j => j.roleId === etape.id && j.enVie);
-        const nomsDesJoueurs = joueursDeLeEtape.map(j => j.nom).join(', ');
+        const joueursDeCetteEtape = joueursPartie.filter(j => j.roleId === etape.id && j.enVie);
+        const nomsDesJoueurs = joueursDeCetteEtape.map(j => j.nom).join(', ');
 
-        // Reset du Timer
         zoneTimer.classList.add('cache');
         zoneTimer.style.display = "none";
         clearInterval(timerInterval);
         btnStartTimer.disabled = false;
-        btnStartTimer.textContent = "Start Timer";
+        btnStartTimer.textContent = t.btnStartTimer;
         affichageChrono.style.color = "var(--accent)";
 
+
         let html = `<div class="etape-container">`;
+
         if (etape.id !== 'matin') {
-            html += `<div class="etape-role">${etape.nom}</div>`;
+
+            let roleKey = "";
+            if (etape.id === 'voyante') roleKey = "roleSeer";
+            else if (etape.id === 'loup') roleKey = "roleWolves";
+            else if (etape.id === 'sorciere') roleKey = "roleWitch";
+            else if (etape.id === 'cupidon') roleKey = "roleCupid";
+            else if (etape.id === 'garde') roleKey = "roleGuard";
+            else if (etape.id === 'corbeau') roleKey = "roleCrow";
+            else if (etape.id === 'lovers') roleKey = "roleLovers";
+
+            const titreTraduit = i18n[currentLang][roleKey] || etape.nom;
+
+            html += `<div class="etape-role" data-i18n="${roleKey}">${titreTraduit}</div>`;
         }
+
         if (etape.id !== 'matin' && etape.id !== 'lovers' && nomsDesJoueurs) {
-            if (etape.id == 'loup') {
-                html += `<div class="etape-joueurs">Player(s): <strong>${nomsDesJoueurs}</strong></div>`;
-            } else {
-                html += `<div class="etape-joueurs">Player: <strong>${nomsDesJoueurs}</strong></div>`;
-            }
+            html += `<div class="etape-joueurs">
+                    <span data-i18n="playerLabel">${i18n[currentLang].playerLabel}</span> 
+                    <strong>${nomsDesJoueurs}</strong> 
+                 </div>`;
         }
 
         switch (etape.id) {
             case 'cupidon':
                 html += `
                     <div class="action-mj">
-                        <p class="info-bulle">Cupid chooses the two lovers:</p>
+                        <p class="info-bulle">${t.cupidInst}</p>
                         <div class="lovers-selection">
                             <select id="l1">
-                                <option value="">Lover 1...</option>
+                                <option value="">${t.lover1}</option>
                                 ${optionsVivants}
                             </select>
                             <div class="heart-icon">❤️</div>
                             <select id="l2">
-                                <option value="">Lover 2...</option>
+                                <option value="">${t.lover2}</option>
                                 ${optionsVivants}
                             </select>
                         </div>
@@ -470,10 +701,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }, 0);
                 break;
+
             case 'lovers':
-                const texteLovers = (lovers.length > 0) ? lovers.join(' & ') : "None selected";
-                html += `<div class="etape-joueurs">Lovers: <strong class="text-gold">${texteLovers}</strong></div><p>They recognize each other.</p>`;
+                const texteLovers = (lovers.length > 0) ? lovers.join(' & ') : t.noneSelected;
+                html += `<div class="etape-joueurs">${t.loversLabel} <strong class="text-gold">${texteLovers}</strong></div><p>${t.loversRec}</p>`;
                 break;
+
             case 'voyante':
                 const optionsCiblesSeer = joueursPartie
                     .filter(j => j.enVie && j.roleId !== 'voyante')
@@ -482,9 +715,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 html += `
                     <div class="action-mj">
-                        <p class="info-bulle">Who do they inspect tonight?</p>
+                        <p class="info-bulle">${t.seerInst}</p>
                         <select id="seer-target">
-                            <option value="">Select target...</option>
+                            <option value="">${t.selTarget}</option>
                             ${optionsCiblesSeer}
                         </select>
                         <div id="seer-result-container"></div>
@@ -492,7 +725,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 setTimeout(() => {
                     const sel = document.getElementById('seer-target');
-
                     if (btnEtapeSuivante) btnEtapeSuivante.disabled = true;
 
                     if (sel) {
@@ -514,26 +746,27 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }, 0);
                 break;
-            case 'garde':
-                let optionsGarde = '<option value="" disabled selected>Select a player to protect...</option>';
 
+            case 'garde':
+                let optionsGarde = `<option value="" disabled selected>${t.selProtect}</option>`;
                 const survivantsGarde = joueursPartie.filter(j => j.enVie);
 
                 survivantsGarde.forEach(j => {
                     if (j.nom === lastProtectedByGuard) {
-                        optionsGarde += `<option value="${j.nom}" disabled>${j.nom} (Protected last night)</option>`;
+                        optionsGarde += `<option value="${j.nom}" disabled>${j.nom} (${t.protLastNight})</option>`;
                     } else {
                         optionsGarde += `<option value="${j.nom}">${j.nom}</option>`;
                     }
                 });
 
                 html += `
-                    <p class="info-bulle">The Guard must choose a player to protect from the wolves, not the same person twice in a row.</p>
+                    <p class="info-bulle">${t.guardInst}</p>
                     <select id="select-garde">
                         ${optionsGarde}
                     </select>
                 `;
                 break;
+
             case 'loup':
                 const optionsProies = joueursPartie
                     .filter(j => j.enVie)
@@ -542,9 +775,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 html += `
                     <div class="action-mj">
-                        <p class="info-bulle">The Werewolves must choose a prey:</p>
+                        <p class="info-bulle">${t.wolvesInst}</p>
                         <select id="kill">
-                            <option value="">Select a victim...</option>
+                            <option value="">${t.selVictim}</option>
                             ${optionsProies}
                         </select>
                     </div>`;
@@ -562,34 +795,36 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }, 0);
                 break;
+
             case 'sorciere':
                 html += `
                     <div class="action-mj">
                         <div class="parametres-groupe potion-group">
-                            <p class="parametre-titre">💖 Potion of Life :</p>
+                            <p class="parametre-titre">${t.witchLife}</p>
                             ${witchHasSave ? `
                                 <p class="witch-info">
-                                    Target of the wolves: <span class="witch-target">${victimsTonight.length > 0 ? victimsTonight.join(', ') : 'Nobody'}</span>
+                                    ${t.targetWolves} <span class="witch-target">${victimsTonight.length > 0 ? victimsTonight.join(', ') : t.nobody}</span>
                                 </p>
                                 <select id="witch-save">
-                                    <option value="">Don't use</option>
-                                    ${victimsTonight.map(v => `<option value="${v}">${v}</option>`).join('')}
+                                    <option value="">${t.dontUse}</option>
+                                    ${victimsTonight.map(v => `<option value="${v}">${t.save} ${v}</option>`).join('')}
                                 </select>
-                            ` : `<p class="potion-used">❌ Already used</p>`}
+                            ` : `<p class="potion-used">${t.used}</p>`}
                         </div>
 
                         <div class="parametres-groupe">
-                            <p class="parametre-titre">💀 Potion of Death :</p>
+                            <p class="parametre-titre">${t.witchDeath}</p>
                             ${witchHasKill ? `
                                 <select id="witch-kill">
-                                    <option value="">Don't use</option>
-                                    ${joueursPartie.filter(j => j.enVie).map(j => `<option value="${j.nom}">${j.nom}</option>`).join('')}
+                                    <option value="">${t.dontUse}</option>
+                                    ${joueursPartie.filter(j => j.enVie).map(j => `<option value="${j.nom}">${t.kill} ${j.nom}</option>`).join('')}
                                 </select>
-                            ` : `<p class="potion-used">❌ Already used</p>`}
+                            ` : `<p class="potion-used">${t.used}</p>`}
                         </div>
                     </div>
                 `;
                 break;
+
             case 'corbeau':
                 const optionsObligatoires = joueursPartie
                     .filter(j => j.enVie)
@@ -598,9 +833,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 html += `
                     <div class="action-mj">
-                        <p class="info-bulle">The Crow must curse a player tonight:</p>
+                        <p class="info-bulle">${t.crowInst}</p>
                         <select id="curse">
-                            <option value="">Select a target...</option>
+                            <option value="">${t.selTarget}</option>
                             ${optionsObligatoires}
                         </select>
                     </div>`;
@@ -618,16 +853,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }, 0);
                 break;
+
             case 'matin':
                 document.body.classList.add('theme-jour');
-
                 victimsTonight.forEach(nom => tuerJoueur(nom));
 
                 if (btnEtapeSuivante) {
                     if (jeuTermine) {
-                        btnEtapeSuivante.innerHTML = "SHOW VICTORY";
+                        btnEtapeSuivante.innerHTML = t.btnVictory;
                     } else {
-                        btnEtapeSuivante.innerHTML = "Proceed to council";
+                        btnEtapeSuivante.innerHTML = t.btnProceed;
                     }
                     btnEtapeSuivante.classList.remove('cache');
                     btnEtapeSuivante.style.display = "block";
@@ -635,22 +870,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const survivantsMatin = joueursPartie.filter(j => j.enVie);
                 const tamerAlive = survivantsMatin.find(j => j.roleId === 'montreur');
-                
+
                 let bearMsg = "";
                 if (tamerAlive) {
                     const idx = survivantsMatin.indexOf(tamerAlive);
-                    
                     const left = survivantsMatin[(idx - 1 + survivantsMatin.length) % survivantsMatin.length];
                     const right = survivantsMatin[(idx + 1) % survivantsMatin.length];
-                    
                     const growl = (left.roleId === 'loup' || right.roleId === 'loup');
-                    
-                    bearMsg = growl ? 
+
+                    bearMsg = growl ?
                         `<div class="bear-growl">
                             <span class="event-icon">🐻</span>
-                            <div><strong>The Bear Growls!</strong> A wolf is nearby...</div>
-                        </div>` : 
-                        `<div class="bear-silent">🐾 The Bear remains peaceful.</div>`;
+                            <div><strong>${t.bearGrowls}</strong> ${t.wolfNearby}</div>
+                        </div>` :
+                        `<div class="bear-silent">${t.bearPeaceful}</div>`;
                 }
 
                 let htmlMorts = "";
@@ -661,20 +894,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         return `<div class="annonce-mort cause-classique">
                                     <span class="annonce-mort-nom">${nom}${coeur}</span>
-                                    <span class="annonce-mort-role">Role: ${joueur ? joueur.roleNom : 'Unknown'}</span>
+                                    <span class="annonce-mort-role">${t.role} ${joueur ? joueur.roleNom : 'Unknown'}</span>
                                 </div>`;
                     }).join('');
                 } else {
-                    htmlMorts = `<div class="safe-night">☀️ Safe night! No one died.</div>`;
+                    htmlMorts = `<div class="safe-night">${t.safeNight}</div>`;
                 }
 
                 const crowHtml = crowTarget ? `
                     <div class="crow-mark">
                         <span class="event-icon">🐦‍⬛</span>
                         <div>
-                            <strong>Crow's Mark</strong>
+                            <strong>${t.crowMark}</strong>
                             <span class="crow-target-name">${crowTarget}</span>
-                            <span class="crow-text-info">starts with 1 vote against them.</span>
+                            <span class="crow-text-info">${t.startsVote}</span>
                         </div>
                     </div>` : '';
 
@@ -688,8 +921,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         <div class="no-events-night">
                             <span class="event-icon">🍃</span>
                             <div>
-                                <strong>No other events</strong><br>
-                                The village wakes up without further disturbances.
+                                <strong>${t.noEvents}</strong><br>
+                                ${t.villageWakes}
                             </div>
                         </div>
                     `;
@@ -706,18 +939,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (attenteTirChasseur || attenteSuccession) {
                     if (btnEtapeSuivante) btnEtapeSuivante.style.display = "none";
-
                     if (attenteTirChasseur) html += gererTirChasseur();
                     if (attenteSuccession) html += gererSuccessionCapitaine();
                 } else {
                     if (btnEtapeSuivante) {
-                        btnEtapeSuivante.innerHTML = jeuTermine ? "SHOW VICTORY" : "Proceed to council";
+                        btnEtapeSuivante.innerHTML = jeuTermine ? t.btnVictory : t.btnProceed;
                         btnEtapeSuivante.style.display = "block";
                     }
                 }
 
                 const survivantsReels = joueursPartie.filter(j => j.enVie);
-                let optionsVote = '<option value="">Nobody (Tie / Skip)</option>';
+                let optionsVote = `<option value="">${t.nobodyTie}</option>`;
                 optionsVote += survivantsReels.map(j => `<option value="${j.nom}">${j.nom}</option>`).join('');
 
                 if (selectElimineVillage) {
@@ -729,6 +961,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     btnEtapeSuivante.addEventListener('click', () => {
+        const t = i18n[currentLang];
 
         if (jeuTermine && typeVictoire) {
             afficherEcranVictoire(typeVictoire);
@@ -749,7 +982,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (ecranNews && !ecranNews.classList.contains('cache')) {
                 ecranNews.classList.add('cache');
                 if (contenuEtapeNuit) contenuEtapeNuit.classList.add('cache');
-                if (titreNuit) titreNuit.innerHTML = `☀️ Village Council`;
+                if (titreNuit) titreNuit.innerHTML = t.council;
                 if (zoneTimer) {
                     zoneTimer.classList.remove('cache');
                     zoneTimer.style.display = "block";
@@ -761,7 +994,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     zoneVoteVillage.classList.remove('cache');
                     zoneVoteVillage.style.display = "block";
                 }
-                btnEtapeSuivante.innerHTML = "Proceed";
+                btnEtapeSuivante.innerHTML = t.btnProceedShort;
                 return;
             }
 
@@ -769,13 +1002,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!elimineVillage && !hasRevotedToday) {
                 hasRevotedToday = true;
-                titreNuit.innerHTML = `⚖️ Revote`;
+                titreNuit.innerHTML = t.revote;
                 if (discussionTime > 0) {
                     const mins = Math.floor(discussionTime / 60);
                     const secs = discussionTime % 60;
                     affichageChrono.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
                     btnStartTimer.disabled = false;
-                    btnStartTimer.textContent = "Start Timer";
+                    btnStartTimer.textContent = t.btnStartTimer;
                 }
                 return;
             }
@@ -787,11 +1020,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             tousLesMorts.forEach(nom => tuerJoueur(nom));
 
-            // --- NOUVEAU : On prépare la liste de TOUS les morts du conseil ---
             let mortsDuConseil = [];
             if (elimineVillage) {
                 mortsDuConseil.push(elimineVillage);
-                // Si l'éliminé est amoureux, on ajoute son partenaire à l'affichage
                 if (lovers.includes(elimineVillage)) {
                     const partnerNom = lovers.find(n => n !== elimineVillage);
                     mortsDuConseil.push(partnerNom);
@@ -804,12 +1035,11 @@ document.addEventListener("DOMContentLoaded", () => {
             zoneVoteVillage.style.display = "none";
             zoneTimer.style.display = "none";
 
-            let htmlSentence = `<h2 class="titre-nuit-etape">☀️ Village Council</h2>`;
+            let htmlSentence = `<h2 class="titre-nuit-etape">${t.council}</h2>`;
             htmlSentence += `<div class="etape-container"><div class="mort-conseil-wrapper">`;
 
             if (mortsDuConseil.length > 0) {
-                htmlSentence += `<p class="resultat-conseil">The village has decided</p>`;
-
+                htmlSentence += `<p class="resultat-conseil">${t.villageDecided}</p>`;
                 mortsDuConseil.forEach(nomMort => {
                     const joueurObj = joueursPartie.find(p => p.nom === nomMort);
                     const coeur = mortsParAmour.includes(nomMort) ? ' ❤️' : '';
@@ -817,14 +1047,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     htmlSentence += `
                         <div class="annonce-mort cause-classique">
                             <span class="annonce-mort-nom">${nomMort}${coeur}</span>
-                            <span class="annonce-mort-role">Role: ${joueurObj ? joueurObj.roleNom : 'Unknown'}</span>
+                            <span class="annonce-mort-role">${t.role} ${joueurObj ? joueurObj.roleNom : 'Unknown'}</span>
                         </div>`;
                 });
             } else {
                 htmlSentence += `
                     <div class="no-death-council">
                         <span class="no-death-icon">⚖️</span>
-                        <p>Equality or skip: <strong>No one was executed.</strong></p>
+                        <p>${t.noDeath}</p>
                     </div>`;
             }
             htmlSentence += `</div></div>`;
@@ -835,20 +1065,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (attenteTirChasseur || attenteSuccession) {
                 btnEtapeSuivante.style.display = "none";
-
                 if (attenteTirChasseur) zoneSentenceVillage.innerHTML += gererTirChasseur();
                 if (attenteSuccession) zoneSentenceVillage.innerHTML += gererSuccessionCapitaine();
             } else {
                 if (jeuTermine) {
-                    btnEtapeSuivante.innerHTML = "SHOW VICTORY";
+                    btnEtapeSuivante.innerHTML = t.btnVictory;
                 } else {
-                    btnEtapeSuivante.innerHTML = "NEXT NIGHT";
+                    btnEtapeSuivante.innerHTML = t.btnNextNight;
                 }
                 btnEtapeSuivante.style.display = "block";
             }
-
-            enPhaseSentence = true;
-
             return;
         }
 
@@ -858,7 +1084,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (v1 && v2 && v1 !== v2) {
                 lovers = [v1, v2];
             } else if (v1 || v2) {
-                alert("Select 2 different lovers.");
+                alert(t.errLovers);
                 return;
             }
 
@@ -867,7 +1093,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (selectGarde) {
                 const joueurChoisi = selectGarde.value;
                 if (!joueurChoisi) {
-                    alert("The Guard MUST protect someone!");
+                    alert(t.guardMust);
                     return;
                 }
                 protectedTonight = joueurChoisi;
@@ -875,7 +1101,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
         } else if (etape.id === 'loup') {
-            const selectLoups = document.getElementById('select-loups') || document.getElementById('kill');
+            const selectLoups = document.getElementById('kill');
             if (selectLoups) {
                 const k = selectLoups.value;
                 if (k && k !== protectedTonight) {
@@ -926,6 +1152,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function lancerNuitSuivante() {
+        const t = i18n[currentLang];
         enPhaseSentence = false;
         zoneSentenceVillage.classList.add('cache');
         zoneSentenceVillage.style.display = "none";
@@ -935,7 +1162,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         isFirstNight = false;
         nightCount++;
-        titreNuit.textContent = `Night ${nightCount}`;
+        titreNuit.textContent = `${t.night} ${nightCount}`;
 
         preparerEtapesNuit();
     }
@@ -985,17 +1212,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     btnMasterView.addEventListener('click', () => {
+        const t = i18n[currentLang];
         let html = '<table class="master-table">';
         html += `
             <tr class="master-tr-header">
-                <th class="master-th">Name</th>
-                <th class="master-th">Role</th>
-                <th class="master-th-center">Status</th>
+                <th class="master-th">${t.mvName}</th>
+                <th class="master-th">${t.mvRole}</th>
+                <th class="master-th-center">${t.mvStatus}</th>
             </tr>`;
 
         joueursPartie.forEach(j => {
             const estMortMaintenant = !j.enVie || victimsTonight.includes(j.nom);
-
             const statusClass = !estMortMaintenant ? 'status-alive' : 'status-dead';
             const heartIcon = (lovers.includes(j.nom)) ? ' ❤️' : '';
             const capIcon = (nomCapitaine === j.nom) ? ' 🎖️' : '';
@@ -1009,7 +1236,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         ${j.roleNom}
                     </td>
                     <td class="master-td-center ${statusClass}">
-                        ${!estMortMaintenant ? 'ALIVE' : 'DEAD'}
+                        ${!estMortMaintenant ? t.mvAlive : t.mvDead}
                     </td>
                 </tr>`;
         });
@@ -1017,7 +1244,7 @@ document.addEventListener("DOMContentLoaded", () => {
         html += '</table>';
 
         const vivants = joueursPartie.filter(j => j.enVie && !victimsTonight.includes(j.nom)).length;
-        html += `<p class="master-alive-count">Players alive: ${vivants} / ${joueursPartie.length}</p>`;
+        html += `<p class="master-alive-count">${t.mvPlayers} ${vivants} / ${joueursPartie.length}</p>`;
 
         recapPlayersList.innerHTML = html;
         modalMasterView.classList.remove('cache');
@@ -1042,23 +1269,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const camp2 = vivants[1].roleId === 'loup' ? 'loup' : 'village';
             if (camp1 !== camp2) return 'amoureux';
         }
-
-        if (villageois.length === 0 && loups.length > 0) {
-            return 'loups';
-        }
-
-        if (loups.length === 0 && villageois.length > 0) {
-            return 'village';
-        }
-
-        if (loups.length === 0 && villageois.length === 0) {
-            return 'egalite';
-        }
+        if (villageois.length === 0 && loups.length > 0) return 'loups';
+        if (loups.length === 0 && villageois.length > 0) return 'village';
+        if (loups.length === 0 && villageois.length === 0) return 'egalite';
 
         return null;
     }
 
     function afficherEcranVictoire(type) {
+        const t = i18n[currentLang];
         jeuTermine = true;
 
         if (titreNuit) {
@@ -1082,32 +1301,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let config = {
             icon: "🏘️",
-            title: "Village Victory",
+            title: t.vicVillTitle,
             class: "victory-village",
-            desc: "The threat is gone. Peace returns to the village."
+            desc: t.vicVillDesc
         };
 
         if (type === 'loups') {
-            config = {
-                icon: "🐺",
-                title: "Wolves Victory",
-                class: "victory-wolves",
-                desc: "The village is silent. The pack has won."
-            };
+            config = { icon: "🐺", title: t.vicWolfTitle, class: "victory-wolves", desc: t.vicWolfDesc };
         } else if (type === 'amoureux') {
-            config = {
-                icon: "❤️",
-                title: "Lovers Victory",
-                class: "victory-lovers",
-                desc: "Love was stronger than the call of the wild."
-            };
+            config = { icon: "❤️", title: t.vicLoveTitle, class: "victory-lovers", desc: t.vicLoveDesc };
         } else if (type === 'egalite') {
-            config = {
-                icon: "🪦",
-                title: "Mutual Destruction",
-                class: "victory-egalite",
-                desc: "Everyone is dead. The village is nothing but a ghost town."
-            };
+            config = { icon: "🪦", title: t.vicTieTitle, class: "victory-egalite", desc: t.vicTieDesc };
         }
 
         zoneSentenceVillage.innerHTML = `
@@ -1126,7 +1330,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnEtapeSuivante.parentNode.replaceChild(nouveauBtn, btnEtapeSuivante);
 
             nouveauBtn.id = "btn-etape-suivante";
-            nouveauBtn.innerHTML = "NEW GAME";
+            nouveauBtn.innerHTML = t.btnNewGame;
             nouveauBtn.style.display = "block";
             nouveauBtn.classList.remove("cache");
             nouveauBtn.disabled = false;
@@ -1140,27 +1344,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function gererTirChasseur() {
+        const t = i18n[currentLang];
         const survivants = joueursPartie.filter(j => j.enVie);
         let options = survivants.map(j => `<option value="${j.nom}">${j.nom}</option>`).join('');
 
         return `
             <div class="etape-container hunter-box" id="bloc-chasseur">
-                <h3 class="hunter-title">🎯 Hunter's Revenge</h3>
+                <h3 class="hunter-title">${t.huntRev}</h3>
                 <p class="hunter-instruction">
-                    <strong>${nomChasseurMort}</strong> died and must shoot someone!
+                    <strong>${nomChasseurMort}</strong> ${t.huntDied}
                 </p>
                 <select id="select-cible-chasseur">
-                    <option value="" disabled selected>Choose the victim...</option>
+                    <option value="" disabled selected>${t.selVictim}</option>
                     ${options}
                 </select>
-                <button onclick="validerTirChasseur()" class="btn-principal btn-hunter">SHOOT</button>
+                <button onclick="validerTirChasseur()" class="btn-principal btn-hunter">${t.btnShoot}</button>
             </div>
         `;
     }
 
     window.validerTirChasseur = function () {
+        const t = i18n[currentLang];
         const cible = document.getElementById('select-cible-chasseur').value;
-        if (!cible) return alert("The Hunter MUST shoot someone!");
+        if (!cible) return alert(t.huntMust);
 
         document.getElementById('bloc-chasseur').classList.add('cache');
 
@@ -1169,9 +1375,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (btnEtapeSuivante) {
             if (jeuTermine) {
-                btnEtapeSuivante.innerHTML = "SHOW VICTORY";
+                btnEtapeSuivante.innerHTML = t.btnVictory;
             } else {
-                btnEtapeSuivante.innerHTML = "Proceed";
+                btnEtapeSuivante.innerHTML = t.btnProceedShort;
             }
             btnEtapeSuivante.style.display = "block";
         }
@@ -1180,10 +1386,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const htmlSentence = `
             <div class="mort-conseil-wrapper hunter-sentence-wrapper">
-                <p class="resultat-conseil resultat-chasseur">Shot by the Hunter</p>
+                <p class="resultat-conseil resultat-chasseur">${t.shotBy}</p>
                 <div class="annonce-mort cause-chasseur">
                     <span class="annonce-mort-nom">${cible}</span>
-                    <span class="annonce-mort-role">${joueurObj ? joueurObj.roleNom : 'Unknown'}</span>
+                    <span class="annonce-mort-role">${t.role} ${joueurObj ? joueurObj.roleNom : 'Unknown'}</span>
                 </div>
             </div>
         `;
@@ -1193,7 +1399,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ecranNews.querySelector('.morning-news-container').innerHTML += htmlSentence;
 
             const survivantsReels = joueursPartie.filter(j => j.enVie);
-            let optionsVote = '<option value="">Nobody (Tie / Skip)</option>';
+            let optionsVote = `<option value="">${t.nobodyTie}</option>`;
             optionsVote += survivantsReels.map(j => `<option value="${j.nom}">${j.nom}</option>`).join('');
             if (selectElimineVillage) selectElimineVillage.innerHTML = optionsVote;
         } else {
@@ -1206,31 +1412,33 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     function gererSuccessionCapitaine() {
+        const t = i18n[currentLang];
         const survivants = joueursPartie.filter(j => j.enVie);
         let options = survivants.map(j => `<option value="${j.nom}">${j.nom}</option>`).join('');
 
         return `
             <div class="etape-container captain-box" id="bloc-succession">
-                <h3 class="captain-title">🎖️ NEW CAPTAIN</h3>
-                <p class="hunter-instruction">The Captain is dead. They must designate a successor!</p>
+                <h3 class="captain-title">${t.newCap}</h3>
+                <p class="hunter-instruction">${t.capDead}</p>
                 <select id="select-nouveau-capitaine">
-                    <option value="" disabled selected>Select the next Captain...</option>
+                    <option value="" disabled selected>${t.selNextCap}</option>
                     ${options}
                 </select>
-                <button onclick="validerSuccession()" class="btn-principal btn-captain">Proceed</button>
+                <button onclick="validerSuccession()" class="btn-principal btn-captain">${t.btnProceedShort}</button>
             </div>
         `;
     }
 
     window.validerSuccession = function () {
+        const t = i18n[currentLang];
         const nouveau = document.getElementById('select-nouveau-capitaine').value;
-        if (!nouveau) return alert("You must choose a successor!");
+        if (!nouveau) return alert(t.capMust);
 
         nomCapitaine = nouveau;
         attenteSuccession = false;
         document.getElementById('bloc-succession').classList.add('cache');
 
-        const msg = `<p class="annonce-succession">🎖️ ${nouveau} is the new Captain!</p>`;
+        const msg = `<p class="annonce-succession">🎖️ ${nouveau} ${t.isNewCap}</p>`;
 
         const ecranNews = document.getElementById('ecran-morning-news');
         if (ecranNews && !ecranNews.classList.contains('cache')) {

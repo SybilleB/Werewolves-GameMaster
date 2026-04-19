@@ -6,6 +6,7 @@
     --secondaire: #1e1e1e;
     --accent: #bb86fc;
     --accent-dark: #7b1fa2;
+    --accent-rgb: 187, 134, 252;
     --rouge-sang: #cf6679;
     --texte: #ffffff;
     --texte-secondaire: #b0b0b0;
@@ -38,9 +39,25 @@ body.theme-jour {
     --texte: #121212;
 }
 
+
+.titre-app {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.4rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    background: linear-gradient(135deg, var(--accent) 0%, #d90000 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    filter: drop-shadow(0 5px 15px rgba(217, 0, 0, 0.4));
+
+    animation: fadeIn 3s ease-out;
+}
+
 .etape-container,
-#zone-timer,
-#zone-vote-village,
 .modal-content {
     background-color: #1e1e1e !important;
     color: #ffffff !important;
@@ -109,20 +126,74 @@ body.theme-jour .titre-nuit-etape {
     border: 1px solid var(--bordure);
 }
 
-.btn-texte {
-    background: none;
+.btn-principal {
+    flex: 1;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: #ffffff;
     border: none;
+    padding: 14px 10px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.80rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(187, 134, 252, 0.3);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-principal:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(187, 134, 252, 0.5);
+    filter: brightness(1.1);
+}
+
+.btn-principal:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(187, 134, 252, 0.3);
+}
+
+.btn-principal:disabled {
+    background: #333333;
+    color: #777777;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-texte {
+    flex: 1;
+    background: transparent;
+    border: 1px solid rgba(207, 102, 121, 0.4);
     color: var(--rouge-sang);
     font-weight: bold;
+    font-size: 0.80rem;
+    padding: 14px 10px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-texte:hover {
+    background: rgba(207, 102, 121, 0.15);
+    border-color: var(--rouge-sang);
+    box-shadow: 0 4px 12px rgba(207, 102, 121, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-texte:active {
+    transform: translateY(0);
 }
 
 .grille-roles {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .carte-role {
@@ -138,6 +209,14 @@ body.theme-jour .titre-nuit-etape {
     cursor: pointer;
     position: relative;
     color: white;
+}
+
+.carte-role.base {
+    margin-top: 20px;
+    margin-bottom: 40px;
+    height: 125px !important;
+    min-height: 125px !important;
+    max-height: 125px !important;
 }
 
 .carte-role.selectionne {
@@ -161,20 +240,31 @@ body.theme-jour .titre-nuit-etape {
     min-height: 80px;
 }
 
+.carte-role h3 {
+    margin: 0 0 10px 0;
+}
+
+.carte-role.special h3 {
+    margin: 0;
+    text-align: center;
+    width: 100%;
+}
+
 /* =========================================
    BORDURES SPÉCIFIQUES (LOUP / VILLAGEOIS)
    ========================================= */
-
 .carte-role.loup.selectionne {
     border-color: var(--rouge-sang) !important;
     background: rgba(207, 102, 121, 0.08) !important;
     box-shadow: 0 0 15px rgba(207, 102, 121, 0.2) !important;
+
 }
 
 .carte-role.villageois.selectionne {
     border-color: var(--succes) !important;
     background: rgba(76, 175, 80, 0.08) !important;
     box-shadow: 0 0 15px rgba(76, 175, 80, 0.2) !important;
+
 }
 
 .carte-role.loup.selectionne .nom-role {
@@ -185,7 +275,6 @@ body.theme-jour .titre-nuit-etape {
     color: var(--succes);
 }
 
-/* Compteurs +/- */
 .controles-compteur {
     display: flex;
     align-items: center;
@@ -233,14 +322,11 @@ body.theme-jour .titre-nuit-etape {
     display: block;
 }
 
-/* FIX ULTIME : Le conteneur des cases à cocher */
 .checkbox-container {
     display: flex !important;
     align-items: center !important;
-    /* Aligne verticalement la case et le texte */
     justify-content: flex-start !important;
     gap: 15px !important;
-    /* Espace fixe */
     cursor: pointer;
     margin: 5px 0;
     padding: 8px 0;
@@ -270,6 +356,12 @@ body.theme-jour .titre-nuit-etape {
     display: flex;
     gap: 8px;
     margin-bottom: 20px;
+    align-items: center;
+}
+
+#nom-joueur {
+    flex: 2;
+    height: 48px;
 }
 
 #nom-joueur {
@@ -282,15 +374,42 @@ body.theme-jour .titre-nuit-etape {
     margin-bottom: 0;
 }
 
+/* =========================================
+   BOUTON AJOUTER (PETIT & ÉLÉGANT)
+   ========================================= */
 #btn-ajouter {
-    flex: 0.5;
-    background: var(--accent);
+    flex: 0.8;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
     border: none;
     border-radius: 8px;
-    color: black;
-    font-size: 1.5rem;
+    color: white;
+    font-size: 0.85rem;
     font-weight: bold;
+    text-transform: uppercase;
     cursor: pointer;
+    height: 48px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+#btn-ajouter:hover {
+    filter: brightness(1.2);
+    transform: scale(1.02);
+}
+
+#btn-ajouter:active {
+    transform: scale(0.98);
+}
+
+
+#btn-demarrer {
+    display: block;
+    margin: 30px auto;
+    width: 80%;
+    max-width: 300px;
 }
 
 .liste-simple {
@@ -329,6 +448,27 @@ body.theme-jour .titre-nuit-etape {
     font-size: 1.2rem;
     cursor: pointer;
     padding: 5px;
+}
+
+/* =========================================
+   ÉLECTION CAPITAINE
+   ========================================= */
+#btn-valider-capitaine {
+    margin-top: 35px !important;
+}
+
+#select-capitaine {
+    margin-bottom: 10px;
+}
+
+#btn-etape-suivante {
+    display: block;
+    /* Force le bouton à se comporter comme un bloc */
+    margin: 30px auto;
+    /* 30px d'espace en haut/bas, auto pour centrer gauche/droite */
+    width: 80%;
+    /* Largeur confortable pour le pouce sur mobile */
+    max-width: 300px;
 }
 
 /* =========================================
@@ -520,83 +660,215 @@ body.theme-jour .titre-nuit-etape {
 }
 
 .bouton-transition-container {
-    text-align: center;
-    margin-top: 30px;
+
+    gap: 12px;
+    width: 100%;
 }
 
 
 /* =========================================
    7. WIDGET TIMER & VOTE DU CONSEIL
    ========================================= */
-#zone-timer {
-    background-color: var(--secondaire);
-    padding: 25px;
-    border-radius: 15px;
-    margin: 20px 0;
-    text-align: left;
-    border: 1px solid var(--bordure);
+.titre-conseil {
+    color: var(--accent);
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 3px; 
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 40px;
+    opacity: 0.8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
 
+.titre-conseil::after {
+    content: "";
+    width: 50%;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--accent);
+}
+
+#zone-timer {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 20px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+#chrono-cercle-container {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin: 0 auto 50px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #affichage-chrono {
-    font-size: 3.8rem;
-    font-weight: 600;
+    position: relative;
+    z-index: 2;
+    font-size: 3.5rem;
+    font-weight: 800;
     color: var(--accent);
-    text-align: center;
+    font-family: monospace;
     line-height: 1;
-    margin-bottom: 15px;
     letter-spacing: 2px;
 }
 
-.barre-timer-conteneur {
+.chrono-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 8px;
-    background: #2a2a2a;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    overflow: hidden;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.chrono-cercle-fond {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 6;
 }
 
 #barre-timer {
-    height: 100%;
-    background: var(--accent);
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 283;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear, stroke 0.3s;
+}
+
+.timer-controles {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap; 
+    gap: 8px; 
+    margin-top: 20px;
     width: 100%;
-    transition: width 1s linear;
 }
 
-#btn-start-timer {
-    background-color: #333;
-    color: #aaa;
-    border: none;
-    padding: 5px 12px;
-    border-radius: 4px;
-    font-size: 0.8rem;
+.timer-controles button {
+    font-family: inherit;
+    font-size: 0.85rem; 
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 10px 12px;
+    border-radius: 8px;
     cursor: pointer;
-    display: block;
-    margin: 0 auto;
-    width: fit-content;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    white-space: nowrap;
 }
 
-#btn-start-timer:active {
-    background-color: #444;
+.btn-timer-secondaire {
+    background-color: rgba(255, 255, 255, 0.05); 
+    color: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-timer-secondaire:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn-timer-principal {
+    background-color: transparent;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 8px rgba(187, 134, 252, 0.2) inset, 0 0 8px rgba(187, 134, 252, 0.2);
+}
+
+.btn-timer-principal:hover {
+    background-color: var(--accent);
+    color: #121212; 
+    box-shadow: 0 0 15px var(--accent);
+    transform: translateY(-2px);
+}
+
+.btn-timer-pause {
+    background-color: transparent !important;
+    color: #ff9800 !important;
+    border: 2px solid #ff9800 !important;
+    box-shadow: 0 0 8px rgba(255, 152, 0, 0.2) inset, 0 0 8px rgba(255, 152, 0, 0.2) !important;
+}
+
+.btn-timer-pause:hover {
+    background-color: #ff9800 !important;
+    color: #121212 !important;
+    box-shadow: 0 0 15px #ff9800 !important;
+}
+
+.timer-controles button:active {
+    transform: translateY(1px); 
+    box-shadow: none !important;
 }
 
 #zone-vote-village {
-    margin-top: 20px;
-    text-align: left;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px; 
+    padding: 30px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-#zone-vote-village p {
-    color: var(--accent);
-    font-size: 0.9rem;
-    font-weight: bold;
-    margin-bottom: 10px;
+#select-elimine-village {
+    appearance: none;
+    -webkit-appearance: none;
+    
+    width: 100%;
+    max-width: 300px;
+    padding: 12px 20px;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    text-align-last: center;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    backdrop-filter: blur(5px);
+}
+
+#select-elimine-village:hover {
+    border-color: var(--accent);
+    background-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.2);
+}
+
+#select-elimine-village option {
+    background-color: #1e1e1e;
+    color: #fff;
+    padding: 10px;
 }
 
 /* =========================================
    8. SENTENCE & CONSEIL
    ========================================= */
-/* --- CONTAINER DE LA SENTENCE --- */
 .sentence-container {
     display: flex;
     flex-direction: column;
@@ -605,26 +877,22 @@ body.theme-jour .titre-nuit-etape {
     padding: 10px 0;
 }
 
-/* --- STYLE DE LA SENTENCE DU CONSEIL --- */
 .sentence-item {
     padding: 25px 20px;
     margin-top: 20px;
     border-left: 6px solid var(--rouge-sang);
-    /* Plus épais que la nuit pour l'impact */
     background: rgba(207, 102, 121, 0.1);
     border-radius: 0 16px 16px 0;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Centre le texte */
     animation: slideIn 0.5s ease;
 }
 
 .sentence-nom {
     color: var(--rouge-sang);
     font-size: 2.5rem;
-    /* Très lisible */
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: -1px;
@@ -639,7 +907,6 @@ body.theme-jour .titre-nuit-etape {
     opacity: 0.9;
 }
 
-/* Cas où personne n'est éliminé */
 .sentence-none {
     padding: 30px;
     text-align: center;
@@ -657,8 +924,6 @@ body.theme-jour .titre-nuit-etape {
     animation: fadeIn 0.5s ease-in;
 }
 
-
-
 .no-death-council {
     text-align: center;
     padding: 20px;
@@ -669,9 +934,7 @@ body.theme-jour .titre-nuit-etape {
 @keyframes fadeIn {
     from {
         opacity: 0;
-    }
-
-    to {
+    } to {
         opacity: 1;
     }
 }
@@ -694,9 +957,7 @@ body.theme-jour .titre-nuit-etape {
     from {
         opacity: 0;
         transform: translateY(20px);
-    }
-
-    to {
+    } to {
         opacity: 1;
         transform: translateY(0);
     }
@@ -718,28 +979,6 @@ body.theme-jour .titre-nuit-etape {
     gap: 15px;
     z-index: 1000;
     border-top: 1px solid var(--bordure);
-}
-
-.btn-principal {
-    background-color: var(--accent);
-    color: black;
-    border: none;
-    padding: 16px 28px;
-    border-radius: 50px;
-    font-weight: 800;
-    font-size: 1rem;
-    cursor: pointer;
-    flex: 1;
-    max-width: 320px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: none !important;
-}
-
-.btn-principal:disabled {
-    background-color: #444;
-    color: #888;
-    cursor: not-allowed;
 }
 
 .btn-danger {
@@ -912,17 +1151,23 @@ body.theme-jour .titre-nuit-etape {
     border: 1px solid #444;
 }
 
-.lang-fr, .lang-en {
+.lang-fr,
+.lang-en {
     flex: 1;
     text-align: center;
     font-weight: bold;
     font-size: 0.85rem;
-    z-index: 2; 
+    z-index: 2;
     transition: color 0.3s ease;
 }
 
-.lang-fr { color: #fff; }
-.lang-en { color: #888; }
+.lang-fr {
+    color: #fff;
+}
+
+.lang-en {
+    color: #888;
+}
 
 .lang-knob {
     position: absolute;
@@ -937,16 +1182,16 @@ body.theme-jour .titre-nuit-etape {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.lang-checkbox:checked + .lang-slider .lang-knob {
+.lang-checkbox:checked+.lang-slider .lang-knob {
     transform: translateX(38px);
 }
 
-.lang-checkbox:checked + .lang-slider .lang-fr {
-    color: #888; 
+.lang-checkbox:checked+.lang-slider .lang-fr {
+    color: #888;
 }
 
-.lang-checkbox:checked + .lang-slider .lang-en {
-    color: #fff; 
+.lang-checkbox:checked+.lang-slider .lang-en {
+    color: #fff;
 }
 
 /* =========================================
@@ -1122,27 +1367,27 @@ select {
 /* =========================================
    15. ORDRE DES JOUEURS
    ========================================= */
-.joueur-info-gauche {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.joueur-place {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--texte-secondaire);
-    font-weight: 800;
-    font-size: 0.9rem;
+.numero-place {
+    display: inline-block;
+    min-width: 32px;
+    text-align: center;
     padding: 4px 8px;
     border-radius: 6px;
-    min-width: 35px;
-    text-align: center;
+    background: rgba(187, 134, 252, 0.2);
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 0.85rem;
 }
 
-.joueur-controles {
+.container-info-joueur {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 15px;
+}
+
+.container-btn-joueur {
+    display: flex;
+    align-items: center;
 }
 
 .btn-ordre {
@@ -1151,18 +1396,17 @@ select {
     color: var(--texte-secondaire);
     font-size: 1.2rem;
     cursor: pointer;
-    padding: 2px 5px;
     transition: color 0.2s;
 }
 
-.btn-ordre:hover {
-    color: var(--accent);
+.btn-supprimer-joueur {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--rouge-sang);
 }
 
-.btn-ordre:disabled {
-    opacity: 0.2;
-    cursor: default;
-}
 
 .info-cercle {
     background: rgba(187, 134, 252, 0.1);
@@ -1360,9 +1604,9 @@ select {
 }
 
 .captain-box {
-    background-color: #1e1e1e !important; 
+    background-color: #1e1e1e !important;
     background: linear-gradient(145deg, #1e1e1e, #121212) !important;
-    
+
     border: 2px solid var(--gold) !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     margin-top: 25px;
@@ -1383,7 +1627,7 @@ select {
 
 .captain-box .hunter-instruction {
     text-align: center;
-    color: #e0e0e0 !important; 
+    color: #e0e0e0 !important;
     background: rgba(255, 255, 255, 0.05);
     padding: 12px;
     border-radius: 8px;
