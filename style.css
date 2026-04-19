@@ -39,23 +39,54 @@ body.theme-jour {
     --texte: #121212;
 }
 
+header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 40px;
+    width: 100%;
+    text-align: center;
+}
 
 .titre-app {
-    text-align: center;
-    margin-top: 30px;
-    margin-bottom: 30px;
     font-size: 2.4rem;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin: 0 0 30px 0;
 
     background: linear-gradient(135deg, var(--accent) 0%, #d90000 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
     filter: drop-shadow(0 5px 15px rgba(217, 0, 0, 0.4));
-
     animation: fadeIn 3s ease-out;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+
+@media (max-width: 768px) {
+    header {
+        gap: 20px;
+        padding: 15px;
+    }
+
+    .titre-app {
+        font-size: 1.8rem;
+        order: 2;
+    }
+
+    .header-controls {
+        order: 1;
+        justify-content: center;
+        width: 100%;
+        gap: 15px;
+    }
 }
 
 .etape-container,
@@ -680,7 +711,7 @@ body.theme-jour .titre-nuit-etape {
     color: var(--accent);
     font-size: 1.5rem;
     text-transform: uppercase;
-    letter-spacing: 3px; 
+    letter-spacing: 3px;
     font-weight: 700;
     margin-top: 0;
     margin-bottom: 40px;
@@ -759,15 +790,15 @@ body.theme-jour .titre-nuit-etape {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: nowrap; 
-    gap: 8px; 
+    flex-wrap: nowrap;
+    gap: 8px;
     margin-top: 20px;
     width: 100%;
 }
 
 .timer-controles button {
     font-family: inherit;
-    font-size: 0.85rem; 
+    font-size: 0.85rem;
     font-weight: 600;
     letter-spacing: 0.5px;
     text-transform: uppercase;
@@ -780,7 +811,7 @@ body.theme-jour .titre-nuit-etape {
 }
 
 .btn-timer-secondaire {
-    background-color: rgba(255, 255, 255, 0.05); 
+    background-color: rgba(255, 255, 255, 0.05);
     color: rgba(255, 255, 255, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -802,7 +833,7 @@ body.theme-jour .titre-nuit-etape {
 
 .btn-timer-principal:hover {
     background-color: var(--accent);
-    color: #121212; 
+    color: #121212;
     box-shadow: 0 0 15px var(--accent);
     transform: translateY(-2px);
 }
@@ -821,7 +852,7 @@ body.theme-jour .titre-nuit-etape {
 }
 
 .timer-controles button:active {
-    transform: translateY(1px); 
+    transform: translateY(1px);
     box-shadow: none !important;
 }
 
@@ -830,7 +861,7 @@ body.theme-jour .titre-nuit-etape {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 25px; 
+    gap: 25px;
     padding: 30px 20px;
     background: rgba(255, 255, 255, 0.02);
     border-radius: 20px;
@@ -840,7 +871,7 @@ body.theme-jour .titre-nuit-etape {
 #select-elimine-village {
     appearance: none;
     -webkit-appearance: none;
-    
+
     width: 100%;
     max-width: 300px;
     padding: 12px 20px;
@@ -941,7 +972,9 @@ body.theme-jour .titre-nuit-etape {
 @keyframes fadeIn {
     from {
         opacity: 0;
-    } to {
+    }
+
+    to {
         opacity: 1;
     }
 }
@@ -964,7 +997,9 @@ body.theme-jour .titre-nuit-etape {
     from {
         opacity: 0;
         transform: translateY(20px);
-    } to {
+    }
+
+    to {
         opacity: 1;
         transform: translateY(0);
     }
