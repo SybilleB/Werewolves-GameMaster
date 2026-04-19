@@ -12,10 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
             guardInst: "The Guard must choose a player to protect from the wolves, not the same person twice in a row.", selProtect: "Select a player to protect...", protLastNight: "Protected last night", guardMust: "The Guard MUST protect someone!",
             wolvesInst: "The Werewolves must choose a prey:", selVictim: "Select a victim...",
             witchLife: "💖 Potion of Life :", witchDeath: "💀 Potion of Death :", targetWolves: "Target of the wolves:", nobody: "Nobody", dontUse: "Don't use", save: "Save", kill: "Kill", used: "❌ Already used",
-            crowInst: "The Crow must curse a player tonight:", startsVote: "starts with 1 vote against them.", crowMark: "Crow's Mark",
+            morningNews : "Morning News", crowInst: "The Crow must curse a player tonight:", startsVote: "starts with 1 vote against them.", crowMark: "Crow's Mark",
             bearGrowls: "The Bear Growls!", wolfNearby: "A wolf is nearby...", bearPeaceful: "🐾 The Bear remains peaceful.",
             safeNight: "☀️ Safe night! No one died.", noEvents: "No other events", villageWakes: "The village wakes up without further disturbances.",
-            nobodyTie: "Nobody (Tie / Skip)", villageDecided: "The village has decided", role: "Role:", noDeath: "Equality or skip: No one was executed.",
+            nobodyTie: "Nobody (Tie / Skip)", villageDecided: "The village has decided", role: "Role:", heartbroken: "Died of a broken heart...", noDeath: "Equality or skip: No one was executed.",
             vicVillTitle: "Village Victory", vicVillDesc: "The threat is gone. Peace returns to the village.",
             vicWolfTitle: "Wolves Victory", vicWolfDesc: "The village is silent. The pack has won.",
             vicLoveTitle: "Lovers Victory", vicLoveDesc: "Love was stronger than the call of the wild.",
@@ -42,10 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
             guardInst: "Le Garde doit protéger un joueur des loups (pas la même personne deux nuits de suite).", selProtect: "Sélectionnez un joueur à protéger...", protLastNight: "Protégé la nuit dernière", guardMust: "Le Garde DOIT protéger quelqu'un !",
             wolvesInst: "Les Loups-Garous choisissent leur proie :", selVictim: "Sélectionnez une victime...",
             witchLife: "💖 Potion de Vie :", witchDeath: "💀 Potion de Mort :", targetWolves: "Cible des loups :", nobody: "Personne", dontUse: "Ne pas utiliser", save: "Sauver", kill: "Tuer", used: "❌ Déjà utilisée",
-            crowInst: "Le Corbeau doit maudire un joueur cette nuit :", startsVote: "commence avec 1 vote contre lui.", crowMark: "Marque du Corbeau",
+            morningNews : "Rapport du matin", crowInst: "Le Corbeau doit maudire un joueur cette nuit :", startsVote: "commence avec 1 vote contre lui.", crowMark: "Marque du Corbeau",
             bearGrowls: "L'Ours Grogne !", wolfNearby: "Un loup est proche...", bearPeaceful: "🐾 L'Ours reste paisible.",
             safeNight: "☀️ Nuit calme ! Personne n'est mort.", noEvents: "Aucun autre événement", villageWakes: "Le village se réveille sans autres perturbations.",
-            nobodyTie: "Personne (Égalité / Passer)", villageDecided: "Le village a tranché", role: "Rôle :", noDeath: "Égalité ou vote blanc : Personne n'a été exécuté.",
+            nobodyTie: "Personne (Égalité / Passer)", villageDecided: "Le village a tranché", role: "Rôle :", heartbroken: "Mort d'un cœur brisé...", noDeath: "Égalité ou vote blanc : Personne n'a été exécuté.",
             vicVillTitle: "Victoire du Village", vicVillDesc: "La menace est écartée. La paix revient au village.",
             vicWolfTitle: "Victoire des Loups", vicWolfDesc: "Le village est silencieux. La meute a gagné.",
             vicLoveTitle: "Victoire des Amoureux", vicLoveDesc: "L'amour a été plus fort que l'appel de la nature.",
@@ -890,12 +890,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (victimsTonight.length > 0) {
                     htmlMorts = victimsTonight.map(nom => {
                         const joueur = joueursPartie.find(p => p.nom === nom);
-                        const coeur = mortsParAmour.includes(nom) ? ' ❤️' : '';
+                        const estMortDAmour = (typeof mortsParAmour !== 'undefined') && mortsParAmour.includes(nom);
+                        const texteCoeurBrise = estMortDAmour
+                            ? `<div class="annonce-mort-detail-coeur">❤️ ${t.heartbroken || "Mort d'un cœur brisé"}</div>`
+                        : '';
 
                         return `<div class="annonce-mort cause-classique">
-                                    <span class="annonce-mort-nom">${nom}${coeur}</span>
-                                    <span class="annonce-mort-role">${t.role} ${joueur ? joueur.roleNom : 'Unknown'}</span>
-                                </div>`;
+                                    <span class="annonce-mort-nom">${nom}</span>
+                                    <span class="annonce-mort-role">${t.role} ${joueur ? joueur.roleNom : 'Unknown'}</span>${texteCoeurBrise}
+                        </div>`;
                     }).join('');
                 } else {
                     htmlMorts = `<div class="safe-night">${t.safeNight}</div>`;
@@ -931,6 +934,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 html += `
                     <div id="ecran-morning-news">
                         <div class="morning-news-container">
+                        <h3 class="morning-news-title" data-i18n="morningNews">${t.morningNews || "Rapport du matin"}</h3>
                             ${htmlMorts}
                             ${roleEventsHtml}
                         </div>

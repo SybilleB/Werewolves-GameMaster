@@ -1,7 +1,23 @@
 /* =========================================
    1. VARIABLES & RESET
    ========================================= */
+@font-face {
+    font-family: 'Cinzel';
+    src: url('Cinzel-VariableFont_wght.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Monserrat';
+    src: url('Montserrat-VariableFont_wght.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
 :root {
+    --font-titre: 'Cinzel', sans-serif;
+    --font-corps: 'Montserrat', 'Segoe UI', sans-serif;
     --fond: #121212;
     --secondaire: #1e1e1e;
     --accent: #bb86fc;
@@ -26,7 +42,7 @@
 body {
     background-color: var(--fond);
     color: var(--texte);
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: var(--font-corps);
     padding: 20px;
     padding-bottom: 120px;
     line-height: 1.6;
@@ -50,8 +66,8 @@ header {
 }
 
 .titre-app {
+    font-family: var(--font-titre);
     font-size: 2.4rem;
-    font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin: 0 0 30px 0;
@@ -121,8 +137,8 @@ h2 {
     text-align: center;
     margin-bottom: 25px;
     font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 h3 {
@@ -603,7 +619,6 @@ body.theme-jour .titre-nuit-etape {
 /* =========================================
    6. PHASE DE JOUR (MORNING NEWS & ÉVÉNEMENTS)
    ========================================= */
-
 .separator-dots {
     border: 0;
     height: 1px;
@@ -619,6 +634,41 @@ body.theme-jour .titre-nuit-etape {
     background: transparent;
     padding: 0;
     margin-bottom: 20px;
+}
+
+.morning-news-title {
+    color: var(--accent);
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 40px;
+    opacity: 0.8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.morning-news-title::after {
+    content: "";
+    width: 50%;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--accent);
+}
+
+.morning-news-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .safe-night,
@@ -1598,44 +1648,69 @@ select {
 /* =========================================
    18. STYLE ANNONCE MORT
 ========================================= */
-
 .annonce-mort {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 12px 15px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    border-left: 4px solid;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left-width: 5px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease;
 }
 
 .annonce-mort-nom {
-    color: var(--rouge-sang, #ff4c4c) !important;
-    font-size: 1.5rem;
+    font-family: var(--font-titre);
+    color: #fff !important;
     font-weight: 900;
-    margin-bottom: 4px;
-    letter-spacing: 1px;
+    margin-bottom: 2px;
+    letter-spacing: 2px;
     text-align: center;
+    text-transform: uppercase;
 }
 
 .annonce-mort-role {
+    font-family: var(--font-corps);
     color: var(--rouge-sang, #ff4c4c) !important;
-    font-size: 1.1rem;
-    color: var(--rouge-sang);
+    font-size: 1rem;
+    font-weight: 700;
     text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
 }
 
 .cause-classique {
     border-left-color: var(--rouge-sang, #ff4c4c) !important;
-    background: rgba(255, 76, 76, 0.15) !important;
+    background: linear-gradient(90deg, rgba(255, 76, 76, 0.1) 0%, transparent 100%) !important;
+    box-shadow: inset 5px 0 10px rgba(255, 76, 76, 0.05);
 }
+
 
 .cause-chasseur {
     border-left-color: #ff9800 !important;
-    background: rgba(255, 152, 0, 0.15) !important;
+    background: linear-gradient(90deg, rgba(255, 152, 0, 0.1) 0%, transparent 100%) !important;
+}
+
+.cause-amour {
+    border-left-color: #ff4d6d !important;
+    background: linear-gradient(90deg, rgba(255, 77, 109, 0.1) 0%, transparent 100%) !important;
+}
+
+.annonce-mort-detail-coeur {
+    font-size: 0.85rem;
+    font-family: var(--font-corps);
+    font-style: italic;
+    color: #ff4d6d;
+    margin-top: 8px;
+    opacity: 0.8;
+    text-align: center;
+    border-top: 1px solid rgba(255, 77, 109, 0.2);
+    padding-top: 5px;
 }
 
 /* =========================================
